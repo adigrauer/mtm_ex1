@@ -1,18 +1,25 @@
 #include "amount_set_str.h"
 #include <stdlib.h>
 
-typedef struct AmountSet {
-    char* description;
-    double item_amount;
-    struct amount_set* current;
-    struct amount_set* next;
-    struct amount_set* previous;
+typedef struct amountSet {
+    struct amountSet* current;
+    struct amountSet* next;
 } *AmountSet;
 
 
-AmountSet asCreate() {
-    AmountSet set = malloc(sizeof(AmountSet)); // לא סגורה פה על הסייזאוף
-    if (set == NULL) return NULL;
+typedef struct node {
+    char* description;
+    double item_amount;
+    struct node* next;
+} *Node;
+
+AmountSet asCreate() 
+{
+    AmountSet set = malloc(sizeof(*set));  
+    if (set == NULL)
+    {
+         return NULL;
+    }
     return set;
 }
 
@@ -21,7 +28,6 @@ void asDestroy(AmountSet set){
         return;
     }
     asClear(set);
-    free(set->description); // האם נחוץ
     free(set);
 }
 
@@ -41,14 +47,15 @@ AmountSet asCopy(AmountSet set){ //צריך לפתור
     }
 }
 
-int asGetSize(AmountSet set) {
+int asGetSize(AmountSet set) { //רוצה לבדוק מקרה שבו הגורם הראשון ריק (אין כלום בסט)
     if (set==NULL){
         return -1;
     }
-    int size = 1;
-    while (set->next != NULL) {
+    int size = 0;
+    AmountSet temp_pointer = set;
+    while (temp_pointer->next != NULL) {
         size++;
-        set = set->next;
+        temp_pointer = temp_pointer->next;
     }
     return size;
 }
@@ -59,7 +66,7 @@ bool asContains(AmountSet set, const char* element) { //האם כאן ניתן �
         if ((strcmp (element, temp_pointer->description))==0){
             return true;
         }
-        temp_pointer == set->next;
+        temp_pointer = set->next;
     }
      return false;
 }
@@ -89,6 +96,6 @@ AmountSetResult asGetAmount(AmountSet set, const char* element, double* outAmoun
     while ((strcmp(temp_pointer->description, element)!=0)) {
         temp_pointer = temp_pointer->next;
     }
-    outAmount = temp_pointer->item_amount;
+    *outAmount = temp_pointer->item_amount;
     return AS_SUCCESS;
 }
