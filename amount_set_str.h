@@ -234,4 +234,11 @@ char* asGetNext(AmountSet set);
         iterator ;                               \
         iterator = asGetNext(set))
 
+
+/////////////internal function for us- delete at the end!!!!!!!!!!
+Node getNextNodeOfSetAmount(AmountSet set);
+Node getNextNodeOfNode(Node node);
+char* getNodeDescriptionPointer(Node node);
+double getNodeItemAmountPointer(Node node);
+
 #endif /* AMOUNT_SET_STR_H_ */

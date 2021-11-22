@@ -125,7 +125,7 @@ AmountSet asCopy(AmountSet set){
     new_set->current_element = set->current_element;
     if (size == 0)
         return new_set;
-    assert(set->next != NULL);
+    assert(new_set->next != NULL);
     Node temp_old_ptr = set->next;
     Node temp_new_ptr = new_set->next;
     for (int i = 0; i < size; i++){
@@ -292,5 +292,29 @@ char* asGetNext(AmountSet set)
     return set->current_element->description;
 }
 
+/* accses functions for the structs */
+////////////////////////////////////////////
+Node getNextNodeOfSetAmount(AmountSet set)
+{
+    return set->next;
+}
+
+Node getNextNodeOfNode(Node node)
+{
+    return node->next;
+}
+
+char* getNodeDescriptionPointer(Node node)
+{
+    return node->description;
+}
+
+double getNodeItemAmountPointer(Node node)
+{
+    return node->item_amount;
+}
+////////////////////////////////////////////
+
+    
 
 
