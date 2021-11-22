@@ -33,6 +33,7 @@
  */
 
 /** Type for defining the set */
+typedef struct Node_t *Node;
 typedef struct AmountSet_t *AmountSet;
 
 /** Type used for returning error codes from amount set functions */

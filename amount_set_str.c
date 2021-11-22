@@ -1,4 +1,5 @@
 #include "amount_set_str.h"
+#include "amount_set_str_tests.h"
 #include <stdlib.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -6,16 +7,16 @@
 
 /* struct declaration */
 ////////////////////////////////////////////
-typedef struct Node_t {
+struct Node_t {
     char* description;
     double item_amount;
     struct Node_t* next;
-} *Node;
+};
 
-typedef struct AmountSet_t {
+struct AmountSet_t {
     struct Node_t* current_element;
     struct Node_t* next;
-} *AmountSet;
+};
 ////////////////////////////////////////////
 
 /* static functions declaration */
@@ -43,8 +44,7 @@ static int strLength(const char* element)
     assert(element != NULL);
     int count = 0;
     const char* ptr = element;
-     while(*ptr != '\0')
-    {
+    while(*ptr != '\0'){
         count++;
         ptr++;
     }
@@ -99,8 +99,8 @@ AmountSet asCreate()
     {
         return NULL;
     }
-    set->next = NULL; //do we nedd to initialze current_element to NULL?
-    /* set->current_element = NULL */
+    set->next = NULL;
+    set->current_element = NULL;
     return set;
 }
 
@@ -122,6 +122,7 @@ AmountSet asCopy(AmountSet set){
         return NULL;
     }
     new_set->next= set->next;
+    new_set->current_element = set->current_element;
     if (size == 0)
         return new_set;
     assert(set->next != NULL);
@@ -287,6 +288,9 @@ char* asGetNext(AmountSet set)
     if(set == NULL || set->next == NULL){
         return NULL;
     }
+    set->current_element = set->current_element->next;
+    return set->current_element->description;
 }
+
 
 
