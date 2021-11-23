@@ -21,27 +21,30 @@ struct AmountSet_t {
 
 /* static functions declaration */
 ////////////////////////////////////////////
-static int strcmp(const char *str1, const char *str2);
-static int strLength(const char* element);
-static char* copyString(const char* element);
-static Node createNode(const char* element);
-static Node cheackForIndexRegister(AmountSet set, const char* element);
+int strcmp(const char *str1, const char *str2);
+int strLength(const char* element);
+char* copyString(const char* element);
+Node createNode(char* element);
+Node cheackForIndexRegister(AmountSet set, const char* element);
 ////////////////////////////////////////////
 
 /* static functions implementation */
 ////////////////////////////////////////////
-static int strcmp(const char *str1, const char *str2)
+int strcmp(const char *str1, const char *str2)
 {
-     while (*str1 && (*str1 == *str2)){
+     while (*str1)
+    {
+        if (*str1 != *str2) {
+            break;
+        }
         str1++;
         str2++;
     }
     return *(const unsigned char*)str1 - *(const unsigned char*)str2;
 }
 
-static int strLength(const char* element)
+int strLength(const char* element)
 {
-    assert(element != NULL);
     int count = 0;
     const char* ptr = element;
     while(*ptr != '\0'){
@@ -51,7 +54,7 @@ static int strLength(const char* element)
     return count;
 }
 
-static char* copyString(const char* element)
+char* copyString(const char* element)
 {
     if (element == NULL){
         return NULL;
@@ -65,25 +68,33 @@ static char* copyString(const char* element)
     while(*element != '\0'){
         *new_string++ = *element++;
     } 
-    return temp;
+    *new_string = '\0';
+    return temp; //האם כאן אנחונ בעצם משנים את מי שנצטרך לשחרר
 }
 
-static Node createNode(const char* element)
+Node createNode(char* element)
 {
+    if (element == NULL){
+        return NULL;
+    }
     Node new_node = (Node)malloc(sizeof(*new_node));  
     if (new_node == NULL)
     {
          return NULL;
     }
+    new_node->next = NULL;
+    new_node->description = element;
+    new_node->item_amount = 0;
     return new_node;
 }
 
-static Node cheackForIndexRegister(AmountSet set, const char* element)
+Node cheackForIndexRegister(AmountSet set, const char* element)
 {
-    assert(element != NULL && set != NULL);
+    if(set->next == NULL || element == NULL){
+        return set->next;
+    }
     Node ptr = set->next;
-    while(strcmp(ptr->description, element) < 0 && strcmp( ptr->next->description, element) < 0 && ptr->next != NULL)
-    {
+    while(strcmp(ptr->description, element) < 0 && ptr->next != NULL && strcmp( ptr->next->description, element) < 0){
         ptr = ptr->next;
     }
     return ptr;
@@ -158,16 +169,13 @@ int asGetSize(AmountSet set) {
 }
 
 bool asContains(AmountSet set, const char* element){ 
-    if (set == NULL || element == NULL) {
-        return false;
-    }
-    if (set->next == NULL){
+    if (set == NULL || element == NULL || set->next == NULL) {
         return false;
     }
     Node ptr = set->next;
     assert(ptr != NULL);
-    while (ptr->next != NULL) {
-        if ((strcmp (element, ptr->description)) == 0){
+    while (ptr != NULL) {
+        if((strcmp (element, ptr->description)) == 0){
             return true;
         }
         ptr = ptr->next;
@@ -193,13 +201,13 @@ AmountSetResult asGetAmount(AmountSet set, const char* element, double* outAmoun
 
 AmountSetResult asRegister(AmountSet set, const char* element)
 {
-    if(set == NULL || element == NULL) 
+    if(element == NULL || set == NULL){
         return AS_NULL_ARGUMENT;
-    if(asContains(set, element) == false) //do i need to change parameters?
+    }
+    if(asContains(set, element) == true){
         return AS_ITEM_ALREADY_EXISTS;
-    Node index = cheackForIndexRegister (set, element);
-    assert(index != NULL);
-    const char* new_element = copyString(element);
+    }
+    char* new_element = copyString(element);
     if(new_element == NULL){
         return AS_OUT_OF_MEMORY;
     }
@@ -213,6 +221,7 @@ AmountSetResult asRegister(AmountSet set, const char* element)
         new_node->next= temp_next_original_pointer;
         return AS_SUCCESS;
     }
+    Node index = cheackForIndexRegister (set, element);
     Node temp_next_original_pointer = index->next; //covers the case of adding new node to the end of the list
     index->next= new_node;
     new_node->next= temp_next_original_pointer;
@@ -233,9 +242,9 @@ AmountSetResult asChangeAmount(AmountSet set, const char* element, double amount
     }
     Node index_of_the_element = index_before_the_element->next;
     assert(index_of_the_element != NULL);
-    if (index_of_the_element->item_amount - amount < 0)
+    if (index_of_the_element->item_amount + amount < 0)
         return AS_INSUFFICIENT_AMOUNT;
-    index_of_the_element->item_amount= index_of_the_element->item_amount - amount;
+    index_of_the_element->item_amount= index_of_the_element->item_amount + amount;
     return AS_SUCCESS;
 }
 
@@ -253,6 +262,7 @@ AmountSetResult asDelete(AmountSet set, const char* element)
        next_index = set->next->next;
        free(set->next);
        set->next = next_index;
+       return AS_SUCCESS;
     }
     Node index_before_the_element = cheackForIndexRegister(set, element);
     assert(index_before_the_element != NULL);
@@ -270,7 +280,17 @@ AmountSetResult asClear(AmountSet set)
     if(set == NULL){
         return AS_NULL_ARGUMENT;
     }
-
+    Node ptr = set->next;
+    Node ptr_tmp = ptr;
+    if(ptr == NULL)
+        return AS_SUCCESS;
+    while(ptr != NULL){
+        free(ptr->description);
+        ptr_tmp= ptr;
+        ptr = ptr->next;
+        free(ptr_tmp);
+    }
+    return AS_SUCCESS;
 }
 
 char* asGetFirst(AmountSet set)
@@ -304,7 +324,7 @@ Node getNextNodeOfNode(Node node)
     return node->next;
 }
 
-char* getNodeDescriptionPointer(Node node)
+const char* getNodeDescriptionPointer(Node node)
 {
     return node->description;
 }
