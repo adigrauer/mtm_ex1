@@ -28,7 +28,7 @@ bool isListSorted(Node list){
 
 Node createNode(int value)
 {
-    Node ptr = malloc(sizeof(*ptr));
+    Node ptr = (Node)malloc(sizeof(*ptr));
     if (ptr == NULL)
         return NULL;
     ptr->x = value;

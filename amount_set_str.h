@@ -232,8 +232,7 @@ char* asGetNext(AmountSet set);
 #define AS_FOREACH(type, iterator, set)          \
     for(type iterator = (type) asGetFirst(set) ; \
         iterator ;                               \
-        iterator = asGetNext(set))
-
+        iterator = asGetNext(set))              
 
 /////////////internal function for us- delete at the end!!!!!!!!!!
 Node getNextNodeOfSetAmount(AmountSet set);
