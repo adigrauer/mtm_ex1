@@ -119,8 +119,9 @@ void asDestroy(AmountSet set){
     if(set == NULL) {
         return;
     }
-    asClear(set);
-    free(set);
+    if (asClear(set) == AS_SUCCESS){
+        free(set);
+    }
 }
 
 AmountSet asCopy(AmountSet set){ 
@@ -132,7 +133,7 @@ AmountSet asCopy(AmountSet set){
     if (new_set == NULL) {
         return NULL;
     }
-    new_set->next= set->next;
+    new_set->next = set->next;
     new_set->current_element = set->current_element;
     if (size == 0)
         return new_set;
@@ -141,11 +142,14 @@ AmountSet asCopy(AmountSet set){
     Node temp_new_ptr = new_set->next;
     for (int i = 0; i < size; i++){
         char* temp_description = copyString(temp_old_ptr->description);
-        temp_new_ptr->description = temp_description;
+        Node next_node = createNode(temp_description);
+        if(next_node == NULL){
+            return NULL;
+        }
+        temp_new_ptr = next_node;
         temp_new_ptr->item_amount = temp_old_ptr->item_amount;
-        temp_new_ptr->next = temp_old_ptr->next;
-        temp_new_ptr = temp_new_ptr->next;
         temp_old_ptr = temp_old_ptr->next;
+        temp_new_ptr = temp_new_ptr->next;
     }
     return new_set;
 }
@@ -241,7 +245,6 @@ AmountSetResult asChangeAmount(AmountSet set, const char* element, double amount
         return AS_OUT_OF_MEMORY;
     }
     Node index_of_the_element = index_before_the_element->next;
-    assert(index_of_the_element != NULL);
     if (index_of_the_element->item_amount + amount < 0)
         return AS_INSUFFICIENT_AMOUNT;
     index_of_the_element->item_amount= index_of_the_element->item_amount + amount;
