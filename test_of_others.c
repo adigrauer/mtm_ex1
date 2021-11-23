@@ -65,7 +65,6 @@ int main() {
         check=false;
     }
 
-
     AmountSet CopySet=asCreate();
     CopySet= asCopy(Set1);
     if(CopySet==NULL)
@@ -74,8 +73,7 @@ int main() {
         printf("Test 1 Failed at check_point 14\n");
         check=false;
     }
-
-
+    
     if(asRegister(CopySet, "yones") !=AS_ITEM_ALREADY_EXISTS){
         printf("Test 1 Failed at check_point 15\n");
         check=false;
