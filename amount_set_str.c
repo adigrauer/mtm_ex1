@@ -238,7 +238,7 @@ AmountSetResult asChangeAmount(AmountSet set, const char* element, double amount
     if(asContains(set, element) == false){
         return AS_ITEM_DOES_NOT_EXIST;
     }
-    if(asGetSize(set) == 1){
+    if(asGetSize(set) == 1 || strcmp(set->next->description, element) == 0){
         if (set->next->item_amount + amount < 0){
             return AS_INSUFFICIENT_AMOUNT;
         }
@@ -247,7 +247,7 @@ AmountSetResult asChangeAmount(AmountSet set, const char* element, double amount
     }
     Node index_before_the_element = cheackForIndexRegister(set, element);
     Node index_of_the_element = index_before_the_element->next;
-    if (index_of_the_element->item_amount + amount < 0)
+    if(index_of_the_element->item_amount + amount < 0)
         return AS_INSUFFICIENT_AMOUNT;
     index_of_the_element->item_amount = index_of_the_element->item_amount + amount;
     return AS_SUCCESS;
@@ -341,7 +341,7 @@ double getNodeItemAmountPointer(Node node)
 {
     return node->item_amount;
 }
-//////////////////////////////////////////// final
+//////////////////////////////////////////// 
 
     
 
