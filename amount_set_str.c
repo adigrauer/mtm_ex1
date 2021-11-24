@@ -1,5 +1,4 @@
 #include "amount_set_str.h"
-#include "amount_set_str_tests.h"
 #include <stdlib.h>
 #include <stdbool.h>
 #include <assert.h>
