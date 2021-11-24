@@ -259,6 +259,7 @@ AmountSetResult asClear(AmountSet set)
         ptr = ptr->next;
         free(ptr_tmp);
     }
+    set->next= NULL;
     return AS_SUCCESS;
 }
 

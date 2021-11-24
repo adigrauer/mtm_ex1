@@ -293,8 +293,110 @@ void test2()
     }
 }
 
+void test3()
+{
+    printf("***************Test_3***************\n");
+    AmountSet set3 = asCreate();
+    bool check=true;
+
+    if(asRegister(set3, "banana")!=AS_SUCCESS)
+    {
+        printf("Test 3 Failed at check_point 1\n");
+        check=false;
+    }
+
+    if(asRegister(set3, "banana")!=AS_ITEM_ALREADY_EXISTS)
+    {
+        printf("Test 3 Failed at check_point 2\n");
+        check=false;
+    }
+
+    if(asRegister(set3, "apple")!=AS_SUCCESS)
+    {
+        printf("Test 3 Failed at check_point 3\n");
+        check=false;
+    }
+
+    if (asGetSize(set3) != 2)
+    {
+        printf("Test 3 Failed at check_point 4\n");
+        check=false;
+    }
+
+    if (asDelete(set3, "carrot") != AS_ITEM_DOES_NOT_EXIST){
+        printf("Test 3 Failed at check_point 5\n");
+        check=false;
+    }
+
+    if (asDelete(set3, "apple") != AS_SUCCESS){
+        printf("Test 3 Failed at check_point 6\n");
+        check=false;
+    }
+
+    AmountSet set3_copy = asCopy(set3);
+    if(asGetSize(set3) != 1 || asGetSize(set3_copy) != 1)
+    {
+        printf("Test 3 Failed at check_point 7\n");
+        check=false;
+    }
+
+    double x= 200.92;
+    if(asChangeAmount(set3_copy, "banana", x) != AS_SUCCESS) 
+    {
+        printf("Test 3 Failed at check_point 8\n");
+        check=false;  
+    } 
+
+    if (asGetAmount(set3_copy, "banana", &x) != AS_SUCCESS) 
+    {
+        printf("Test 3 Failed at check_point 9\n");
+        check=false;
+    }
+    if (x != 200.92) 
+    {
+        printf("Test 3 Failed at check_point 10\n");
+        check=false;
+    }
+
+    if (asClear(set3) != AS_SUCCESS)
+    {
+        printf("Test 3 Failed at check_point 11\n");
+        check=false;
+    }
+
+    if (asRegister (set3, "carrot") != AS_SUCCESS) 
+    {
+        printf("Test 3 Failed at check_point 12\n");
+        check=false;
+    }
+
+    if (asRegister (set3, "banana") != AS_SUCCESS) 
+    {
+        printf("Test 3 Failed at check_point 13\n");
+        check=false;
+    }
+
+    if (strcmp((asGetFirst(set3)),(asGetFirst(set3_copy))) !=0)
+    {
+        printf("Test 3 Failed at check_point 14\n");
+        check=false;
+    }
+    asDestroy(set3);
+    asDestroy(set3_copy);
+
+    if(check==false){
+        printf("\n**************Test 3 failed************\n");
+        //return false;
+    }
+    if(check==true){
+        printf("\n**************Test 3 passed************\n");
+        //return true;
+    }
+}
+    
 int main()
 {
+    test3();
     test2();
     test1();
     return 0;
