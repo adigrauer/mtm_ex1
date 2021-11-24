@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
 /**
  * Amount Set Container
@@ -234,7 +235,5 @@ char* asGetNext(AmountSet set);
         iterator ;                               \
         iterator = asGetNext(set))              
 
-//our punction
-int strcmp(const char *str1, const char *str2);
 
 #endif /* AMOUNT_SET_STR_H_ */
