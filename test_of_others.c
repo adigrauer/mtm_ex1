@@ -297,5 +297,6 @@ void test2()
 int main()
 {
     test2();
+    test1();
     return 0;
 }

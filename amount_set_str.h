@@ -234,16 +234,7 @@ char* asGetNext(AmountSet set);
         iterator ;                               \
         iterator = asGetNext(set))              
 
-/////////////internal function for us- delete at the end!!!!!!!!!!
-Node getNextNodeOfSetAmount(AmountSet set);
-Node getNextNodeOfNode(Node node);
-const char* getNodeDescriptionPointer(Node node);
-double getNodeItemAmountPointer(Node node);
-
+//our punction
 int strcmp(const char *str1, const char *str2);
-int strLength(const char* element);
-char* copyString(const char* element);
-Node createNode(char* element);
-Node cheackForIndexRegister(AmountSet set, const char* element);
 
 #endif /* AMOUNT_SET_STR_H_ */

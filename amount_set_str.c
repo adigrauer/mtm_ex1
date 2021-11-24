@@ -21,10 +21,10 @@ struct AmountSet_t {
 /* static functions declaration */
 ////////////////////////////////////////////
 int strcmp(const char *str1, const char *str2);
-int strLength(const char* element);
-char* copyString(const char* element);
-Node createNode(char* element);
-Node cheackForIndexRegister(AmountSet set, const char* element);
+static int strLength(const char* element);
+static char* copyString(const char* element);
+static Node createNode(char* element);
+static Node cheackForIndexRegister(AmountSet set, const char* element);
 ////////////////////////////////////////////
 
 /* static functions implementation */
@@ -42,7 +42,7 @@ int strcmp(const char *str1, const char *str2)
     return *(const unsigned char*)str1 - *(const unsigned char*)str2;
 }
 
-int strLength(const char* element)
+static int strLength(const char* element)
 {
     int count = 0;
     const char* ptr = element;
@@ -53,7 +53,7 @@ int strLength(const char* element)
     return count;
 }
 
-char* copyString(const char* element)
+static char* copyString(const char* element)
 {
     if (element == NULL){
         return NULL;
@@ -73,7 +73,7 @@ char* copyString(const char* element)
     return new_string; 
 }
 
-Node createNode(char* element)
+static Node createNode(char* element)
 {
     if (element == NULL){
         return NULL;
@@ -89,7 +89,7 @@ Node createNode(char* element)
     return new_node;
 }
 
-Node cheackForIndexRegister(AmountSet set, const char* element)
+static Node cheackForIndexRegister(AmountSet set, const char* element)
 {
     assert(element != NULL && set != NULL && set->next != NULL); //the function add node only if not emty or has one node
     Node ptr = set->next;
@@ -122,7 +122,8 @@ void asDestroy(AmountSet set)
     free(set); 
 }
 
-AmountSet asCopy(AmountSet set){ 
+AmountSet asCopy(AmountSet set)
+{ 
     if (set == NULL) {
         return NULL;
     }
@@ -152,7 +153,8 @@ AmountSet asCopy(AmountSet set){
     return new_set;
 }
 
-int asGetSize(AmountSet set) { 
+int asGetSize(AmountSet set)
+{ 
     if (set == NULL){
         return -1;
     }
@@ -170,7 +172,8 @@ int asGetSize(AmountSet set) {
     return size;
 }
 
-bool asContains(AmountSet set, const char* element){ 
+bool asContains(AmountSet set, const char* element)
+{ 
     if (set == NULL || element == NULL || set->next == NULL) {
         return false;
     }
@@ -185,7 +188,8 @@ bool asContains(AmountSet set, const char* element){
     return false;
 }
 
-AmountSetResult asGetAmount(AmountSet set, const char* element, double* outAmount){
+AmountSetResult asGetAmount(AmountSet set, const char* element, double* outAmount)
+{
     if(set == NULL || element == NULL){
         return AS_NULL_ARGUMENT;
     }
@@ -320,28 +324,6 @@ char* asGetNext(AmountSet set)
     return NULL;
 }
 
-/* accses functions for the structs */
-////////////////////////////////////////////
-Node getNextNodeOfSetAmount(AmountSet set)
-{
-    return set->next;
-}
-
-Node getNextNodeOfNode(Node node)
-{
-    return node->next;
-}
-
-const char* getNodeDescriptionPointer(Node node)
-{
-    return node->description;
-}
-
-double getNodeItemAmountPointer(Node node)
-{
-    return node->item_amount;
-}
-//////////////////////////////////////////// 
 
     
 
