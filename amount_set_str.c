@@ -29,51 +29,6 @@ static Node cheackForIndexRegister(AmountSet set, const char* element);
 
 /* static functions implementation */
 ////////////////////////////////////////////
-/*
-int strcmp(const char *str1, const char *str2)
-{
-    assert(str1 != NULL && str2 != NULL);
-    while (*str1){
-        if (*str1 != *str2) {
-            break;
-        }
-        str1++;
-        str2++;
-    }
-    return *(const unsigned char*)str1 - *(const unsigned char*)str2;
-}
-
-//static int strLength(const char* element)
-{
-    int count = 0;
-    const char* ptr = element;
-    while(*ptr != '\0'){
-        count++;
-        ptr++;
-    }
-    return count;
-}
-
-//static char* copyString(const char* element)
-{
-    if (element == NULL){
-        return NULL;
-    }
-    char* new_string = (char*)malloc(strLength(element)+1);
-    if (new_string == NULL){
-        return NULL;
-    }
-    assert(new_string != NULL && element != NULL);
-    char *temp = new_string;
-    while(*element != '\0'){
-        *temp = *element;
-        temp++;
-        element++;
-    } 
-    *temp = '\0';
-    return new_string; 
-}
-*/
 static Node createNode(char* element)
 {
     if (element == NULL){
@@ -139,27 +94,15 @@ AmountSet asCopy(AmountSet set)
     Node temp_old_ptr = set->next;
     double temp_amount = 0; 
     while(temp_old_ptr != NULL){
-        //char* temp_description = copyString(temp_old_ptr->description);
-        //
-        char* temp_description = malloc(strlen(temp_old_ptr->description)+1);
-        if(temp_description == NULL){
+        if(asRegister(new_set, temp_old_ptr->description) != AS_SUCCESS){
             asDestroy(new_set);
             return NULL;
         }
-        strcpy(temp_description,temp_old_ptr->description);
-        //
-        if(asRegister(new_set, temp_description) != AS_SUCCESS){
-            free(temp_description);
+        if(asGetAmount(set, temp_old_ptr->description ,&temp_amount) != AS_SUCCESS){
             asDestroy(new_set);
             return NULL;
         }
-        if(asGetAmount(set, temp_description ,&temp_amount) != AS_SUCCESS){
-            free(temp_description);
-            asDestroy(new_set);
-            return NULL;
-        }
-        if(asChangeAmount(new_set, temp_description, temp_amount) != AS_SUCCESS){
-            free(temp_description);
+        if(asChangeAmount(new_set, temp_old_ptr->description, temp_amount) != AS_SUCCESS){
             asDestroy(new_set);
             return NULL;
         }
@@ -228,18 +171,11 @@ AmountSetResult asRegister(AmountSet set, const char* element)
     if(asContains(set, element) == true){
         return AS_ITEM_ALREADY_EXISTS;
     }
-    //char* new_element = copyString(element);
-    //
     char* new_element = malloc(strlen(element)+1);
     if(new_element == NULL){
         return AS_OUT_OF_MEMORY;
     }
     strcpy(new_element, element);
-    //
-    /*
-    if(new_element == NULL){
-        return AS_OUT_OF_MEMORY;
-    }*/
     Node new_node = createNode(new_element);
     if(new_node == NULL){
         free(new_element);
@@ -335,7 +271,6 @@ char* asGetFirst(AmountSet set)
     return set->current_element->description;
 }
 
-//should return to that function
 char* asGetNext(AmountSet set)
 {
     if(set == NULL || set->next == NULL){
