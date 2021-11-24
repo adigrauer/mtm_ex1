@@ -67,8 +67,7 @@ void test1()
     }
     
 
-    AmountSet CopySet=asCreate();
-    CopySet= asCopy(Set1);
+    AmountSet CopySet = asCopy(Set1); //leak memory
     if(CopySet==NULL)
     {
         asDestroy(Set1);
@@ -226,8 +225,8 @@ void test2()
         printf("Test 2 Failed at check_point 23\n");
         check=false;
     }
-    AmountSet CopySet2=asCreate();
-    CopySet2= asCopy(Set2);
+ 
+    AmountSet CopySet2 = asCopy(Set2); //leak memory here!
     if(CopySet2==NULL)
     {
         asDestroy(Set2);
