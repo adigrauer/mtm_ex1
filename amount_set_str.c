@@ -141,7 +141,7 @@ AmountSet asCopy(AmountSet set){
         if(asRegister(new_set, temp_description) != AS_SUCCESS){
             return NULL;
         }
-        if(asGetAmount(new_set, temp_description ,&temp_amount) != AS_SUCCESS){
+        if(asGetAmount(set, temp_description ,&temp_amount) != AS_SUCCESS){
             return NULL;
         }
         if(asChangeAmount(new_set, temp_description, temp_amount) != AS_SUCCESS){

@@ -65,6 +65,7 @@ void test1()
         printf("Test 1 Failed at check_point 13\n");
         check=false;
     }
+    
 
     AmountSet CopySet=asCreate();
     CopySet= asCopy(Set1);
@@ -180,7 +181,7 @@ void test2()
         printf("Test 2 Failed at check_point 14\n");
         check=false;
     }
-    if(asChangeAmount(Set2,"lior",10)!=AS_SUCCESS)
+    if(asChangeAmount(Set2,"gili",10)!=AS_SUCCESS)
     {
         printf("Test 2 Failed at check_point 15\n");
         check=false;
@@ -196,7 +197,7 @@ void test2()
         printf("Test 2 Failed at check_point 17\n");
         check=false;
     }
-    if(asGetAmount(Set2,"lior",&x)!=AS_SUCCESS)
+    if(asGetAmount(Set2,"gili",&x)!=AS_SUCCESS)
     {
         printf("Test 2 Failed at check_point 18\n");
         check=false;
@@ -246,17 +247,17 @@ void test2()
         printf("Test 2 Failed at check_point 27\n");
         check=false;
     }
-    if(asChangeAmount(CopySet2,"lior",-11)!=AS_INSUFFICIENT_AMOUNT)
+    if(asChangeAmount(CopySet2,"gili",-11)!=AS_INSUFFICIENT_AMOUNT)
     {
         printf("Test 2 Failed at check_point 28\n");
         check=false;
     }
-    if(asChangeAmount(CopySet2,"lior",-5)!=AS_SUCCESS)
+    if(asChangeAmount(CopySet2,"gili",-5)!=AS_SUCCESS)
     {
         printf("Test 2 Failed at check_point 29\n");
         check=false;
     }
-    if(asGetAmount(CopySet2,"lior",&x)!=AS_SUCCESS)
+    if(asGetAmount(CopySet2,"gili",&x)!=AS_SUCCESS)
     {
         printf("Test 2 Failed at check_point 30\n");
         check=false;
@@ -266,15 +267,15 @@ void test2()
         printf("Test 2 Failed at check_point 31\n");
         check=false;
     }
-    if(asDelete(CopySet2, "lior") !=AS_SUCCESS){
+    if(asDelete(CopySet2, "einat") !=AS_SUCCESS){
         printf("Test 2 Failed at check_point 30\n");
         check=false;
     }
-    if(asDelete(CopySet2, "lior") !=AS_ITEM_DOES_NOT_EXIST){
+    if(asDelete(CopySet2, "einat") !=AS_ITEM_DOES_NOT_EXIST){
         printf("Test 2 Failed at check_point 32\n");
         check=false;
     }
-    if(asGetSize(CopySet2)!=3)
+    if(asGetSize(CopySet2)!=4)
     {
         printf("Test 2 Failed at check_point 33\n");
         check=false;
