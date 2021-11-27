@@ -11,9 +11,9 @@ struct orders_information_t {
 
 //items_in_order node
 struct single_item_in_order {
-    unsigned int product_id;
-    char* product_name;
-    double amount;
+    unsigned int item_id;
+    char* item_description;
     single_item_in_order* next_item_in_order;
-
+    /* double amount; no need to include in the struct single_item_in_order cause the items in the orders organized in amount set ADT,
+    therefore exit build in a field for amount */
 };
