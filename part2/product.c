@@ -24,7 +24,7 @@ MtmProductData createProductData ()
     if (new_data==NULL){
         return NULL;
     }
-    // new_data->price_for_quantity = 0;
+     new_data->price_for_quantity = 0;
     return (MtmProductData)new_data;
 }
 
@@ -65,7 +65,7 @@ ASElement createProduct ()
     }
     new_product->product_id = 0;
     new_product->product_description = NULL;
-    new_product->custom_data = createProductData;
+    new_product->custom_data = NULL;
     if(new_product->custom_data == NULL){
         freeProduct(new_product);
         return NULL;
