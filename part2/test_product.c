@@ -4,13 +4,10 @@
 
 int main () 
 {
-    printf ("*********Test_1***********");
-    bool check=true;
+    printf ("*********Test_1***********\n");
     Product test_product= createProduct();
     Product copy = copyProduct(test_product);
-    printf ("stop1");
     freeProduct(copy);
-    printf ("stop2");
     freeProduct(test_product);
-    printf ("are there any leaks?");
+    printf ("test1 finished, check for leaks");
 }
