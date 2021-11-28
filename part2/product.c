@@ -76,7 +76,7 @@ void freeProduct(ASElement product)
         return NULL; //אולי להחזיר הצלחה?
     }
     free(((Product)product)->product_description);
-    free(((Product)product)->custom_data);
+    freeProductData(((Product)product)->custom_data);
     free ((Product)product);
 }
 
