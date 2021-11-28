@@ -4,17 +4,17 @@
 #include "set.h"
 
 //typedef for structs
-typedef struct orders_information_t *OrdersInformation;
+typedef struct order_information_t *OrderInformation;
 typedef struct single_item_in_order *SingleItemInOrder;
 
 //functions for using generic ADT set for restoring oreders
 SetElement copyOrder(SetElement order);
 SetElement freeOrder(SetElement order);
-SetElement compareOrder(SetElement order_exist, SetElement order_to_add);
+int compareOrder(SetElement order_1, SetElement order_2);
 
 //functions for using generic ADT amount set for restoring items in oreder
-ASElement copyItemInOrder (ASElement item);
-ASElement freeItemInOrder (ASElement item);
-ASElement compareItemInOrder (ASElement item_exist, ASElement item_to_add);
+ASElement copySingleItemInOrder (ASElement item_id);
+ASElement freeSingleleItemInOrder (ASElement item_id);
+int compareItemInOrder (ASElement item_id_1, ASElement item_id_2);
 
 #endif /*ORDERS_H*/
