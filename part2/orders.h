@@ -39,7 +39,7 @@ return value- if allocate was faild or order id does not exist in orders
 otherewise return pointer to OrderInformation */
 AmountSet findSpecificOrderInOrders (Set orders, const unsigned int order_id);
 
-////////////////////////functions for item set amount in an order
+///////////////////////functions for item set amount in an order
 
 /* change the amount of item in specific order.
 return value- AS_OUT_OF_MEMORY if allocation failed.
