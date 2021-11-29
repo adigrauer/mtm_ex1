@@ -48,7 +48,10 @@ AmountSetResult changeAmountOfItemInOrder(AmountSet list_item_in_order, const un
 
 /* get product id and cheack if the product id exit in specific order
 return value- false if the product id do not exit and true if the product id alreay exitd */
-bool checkIfItemExistInOrderById(AmountSet list_items_in_order, const unsigned int product_id)
+bool checkIfItemExistInOrderById(AmountSet list_items_in_order, const unsigned int product_id);
 
+/* create new unsigned int* for id
+returns value- NULL if allocated was faild, otherwise unsigned int* ewith the id */
+unsigned int* createNewIdForItemInOrder(const unsigned int product_id);
 
 #endif /*ORDERS_H*/
