@@ -11,16 +11,17 @@ typedef struct product_t *Product;
 typedef struct productData_t *ProductData;
 
 //functions for using generic ADT amount set for restoring items in storage
-ASElement createProduct ();
+Product createProduct ();
 ASElement copyProduct (ASElement product);
 void freeProduct (ASElement product);
 int compareProduct (ASElement product_exist, ASElement product_to_add);
-
-//functions for using MtmProductData for restoring more information about the product
-MtmProductData createProductData ();
-MtmProductData copyProductData (MtmProductData product_data);
-void freeProductData (MtmProductData product_data);
-double getProductPrice (MtmProductData product_data, const double amount);
+bool productExist (AmountSet products_set, const unsigned int id);
+bool registerProduct (Product new_product, const unsigned int id, const char *name,
+                              const double amount, const MatamikyaAmountType amountType,
+                              const MtmProductData customData, MtmCopyData copyData,
+                              MtmFreeData freeData, MtmGetProductPrice prodPrice);
+Product getProductInStorage (AmountSet storage, const unsigned int id);
+MatamikyaAmountType getAmountType (Product product);
 
 #endif /*PRODUCT_H*/
 
