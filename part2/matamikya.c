@@ -7,6 +7,18 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+///define
+#define INT_VALUE 0.001
+
+/////static declerations
+static MatamikyaResult checkProductValid (Matamikya matamikya, const unsigned int id, const char *name,
+                              const double amount, const MatamikyaAmountType amountType,
+                              const MtmProductData customData, MtmCopyData copyData,
+                              MtmFreeData freeData, MtmGetProductPrice prodPrice);
+
+static MatamikyaResult checkProductAmountValid (const double amount, const MatamikyaAmountType amountType);
+static MatamikyaResult checkProductNameValid (const char *name);
+static MatamikyaResult checkProductAmountSufficient (AmountSet storage, const double amount, Product product);
 //structs implementation 
 ////////////////////////////////////////////////
 struct Matamikya_t{
@@ -130,6 +142,131 @@ MatamikyaResult mtmCancelOrder(Matamikya matamikya, const unsigned int order_id)
    setRemove(matamikya->orders, temp_order);
    return MATAMIKYA_SUCCESS;
 }
+
+MatamikyaResult mtmNewProduct(Matamikya matamikya, const unsigned int id, const char *name,
+                              const double amount, const MatamikyaAmountType amountType,
+                              const MtmProductData customData, MtmCopyData copyData,
+                              MtmFreeData freeData, MtmGetProductPrice prodPrice)
+ {
+     MatamikyaResult result = checkProductValid(matamikya, id, name, amount, amountType, customData, copyData, freeData, prodPrice);
+     if ( result != MATAMIKYA_SUCCESS) {
+         return result;
+     }
+     Product new_product = createProduct();
+     if (new_product == NULL){
+         return MATAMIKYA_OUT_OF_MEMORY;
+     }
+     if (registerProduct(new_product, id, name, amount, amountType, customData, copyData, freeData, prodPrice) == false){
+         freeProduct(new_product);
+         return MATAMIKYA_OUT_OF_MEMORY;
+     }
+    asRegister(matamikya->storage, (ASElement)new_product);
+    asChangeAmount(matamikya->storage, (ASElement)new_product, amount);
+    return MATAMIKYA_SUCCESS;
+ }
+
+static MatamikyaResult checkProductValid (Matamikya matamikya, const unsigned int id, const char *name,
+                              const double amount, const MatamikyaAmountType amountType,
+                              const MtmProductData customData, MtmCopyData copyData,
+                              MtmFreeData freeData, MtmGetProductPrice prodPrice)
+{
+    if (matamikya == NULL || name == NULL || customData == NULL ||copyData == NULL || freeData == NULL
+        || prodPrice == NULL) {
+            return MATAMIKYA_NULL_ARGUMENT;
+        }
+    if (amount < 0) {
+        return MATAMIKYA_INVALID_AMOUNT;
+    }
+    if (checkProductAmountValid(amount, amountType) == MATAMIKYA_INVALID_AMOUNT) {
+        return MATAMIKYA_INVALID_AMOUNT;
+    }
+    if (checkProductNameValid(name) == MATAMIKYA_INVALID_NAME) {
+        return MATAMIKYA_INVALID_NAME;
+    }
+    if(productExist(matamikya->storage, id) == true) {
+        return MATAMIKYA_PRODUCT_ALREADY_EXIST;
+    }
+    return MATAMIKYA_SUCCESS;
+}
+
+static MatamikyaResult checkProductAmountValid (const double amount, const MatamikyaAmountType amountType) 
+{
+    double is_int = amount - (int)amount;
+    if (is_int < 0) {
+        is_int *= -1;
+    } 
+    if (amountType == MATAMIKYA_INTEGER_AMOUNT &&  is_int < (1-INT_VALUE) && is_int > INT_VALUE ) {
+        return MATAMIKYA_INVALID_AMOUNT;
+    }
+    if (amountType == MATAMIKYA_HALF_INTEGER_AMOUNT && (is_int < ((1-INT_VALUE) - 0.5) && is_int > INT_VALUE )
+    || (is_int) > (0.5 + INT_VALUE) && is_int < (1-INT_VALUE)) {
+        return MATAMIKYA_INVALID_AMOUNT;
+    }
+    return MATAMIKYA_SUCCESS;
+}
+
+static MatamikyaResult checkProductNameValid (const char *name) 
+{
+    if (strcmp("", name) == 0)
+    {
+        return MATAMIKYA_INVALID_NAME;
+    }
+    if ( (*name >= 'A' && *name <= 'Z') || (*name >= 'a' && *name <= 'z') || (*name >= '0' && *name <= '9')){
+        return MATAMIKYA_SUCCESS;
+    }
+    return MATAMIKYA_INVALID_NAME;
+}
+
+MatamikyaResult mtmChangeProductAmount(Matamikya matamikya, const unsigned int id, const double amount)
+{   
+    if (matamikya == NULL){
+        return MATAMIKYA_NULL_ARGUMENT;
+    }
+    if (productExist (matamikya->storage, id) != true) {
+        return MATAMIKYA_PRODUCT_NOT_EXIST;
+    }
+    Product ptr = getProductInStorage(matamikya->storage, id);
+    if (ptr == NULL){
+        return MATAMIKYA_OUT_OF_MEMORY;
+    }
+    MatamikyaAmountType amount_type = getAmountType(ptr);
+    if (checkProductAmountValid(amount, amount_type) != MATAMIKYA_SUCCESS) {
+        return MATAMIKYA_INVALID_AMOUNT;
+    }
+    if (checkProductAmountSufficient(matamikya->storage, amount, ptr) != MATAMIKYA_SUCCESS)
+    {
+        return MATAMIKYA_INSUFFICIENT_AMOUNT;
+    }
+    asChangeAmount(matamikya->storage, ptr, amount);
+    return MATAMIKYA_SUCCESS;
+}
+
+static MatamikyaResult checkProductAmountSufficient (AmountSet storage, const double amount, Product product)
+{
+    double real_amount = 0;
+    asGetAmount(storage,(ASElement)product, &real_amount);
+    if (real_amount - amount < 0 ) {
+        return MATAMIKYA_INSUFFICIENT_AMOUNT;
+    }
+    return MATAMIKYA_SUCCESS;
+}
+
+MatamikyaResult mtmClearProduct(Matamikya matamikya, const unsigned int id)
+{
+    if (matamikya == NULL){
+        return MATAMIKYA_NULL_ARGUMENT;
+    }
+    if (productExist(matamikya->storage, id) != true) {
+        return MATAMIKYA_PRODUCT_NOT_EXIST;
+    }
+    ///need to clear from orders/////
+    Product ptr = getProductInStorage(matamikya->storage, id);
+    if (ptr == NULL){
+        return MATAMIKYA_OUT_OF_MEMORY;
+    }
+    asDelete(matamikya->storage, (ASElement)ptr);
+}
+
 
 
 
