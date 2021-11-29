@@ -8,7 +8,7 @@
 
 //typedef for structs
 typedef struct product_t *Product;
-typedef struct mtmProductData_t *ProductData;
+typedef struct productData_t *ProductData;
 
 //functions for using generic ADT amount set for restoring items in storage
 ASElement createProduct ();
@@ -23,3 +23,4 @@ void freeProductData (MtmProductData product_data);
 double getProductPrice (MtmProductData product_data, const double amount);
 
 #endif /*PRODUCT_H*/
+

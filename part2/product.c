@@ -5,16 +5,13 @@
 struct product_t {
     char* product_description;
     unsigned int product_id;
-    MtmProductData custom_data;
-    //need to implement
+    ProductData custom_data;
     MatamikyaAmountType amount_type;
     double profit;
-    /* double amount; no need to include in the struct single_item_in_order cause the items in the orders organized in amount set ADT,
-    therefore exit build in a field for amount */
 }; 
 
 
-struct mtmProductData_t {
+struct productData_t {
     double price_for_quantity; 
 }; 
  
@@ -24,7 +21,7 @@ MtmProductData createProductData ()
     if (new_data == NULL){
         return NULL;
     }
-     new_data->price_for_quantity = 0;
+    new_data->price_for_quantity = 0;
     return (MtmProductData)new_data;
 }
 
@@ -33,11 +30,11 @@ MtmProductData copyProductData (MtmProductData product_data)
     if (((ProductData)product_data) == NULL) {
         return NULL;
     }
-    ProductData new_data = (ProductData)malloc(sizeof(*new_data));  //malloc!!!! need to free 1
+    ProductData new_data = (ProductData)malloc(sizeof(*new_data));  
     if(new_data == NULL){
         return NULL;
     }
-    new_data->price_for_quantity = ((ProductData)product_data)->price_for_quantity;//////
+    new_data->price_for_quantity = ((ProductData)product_data)->price_for_quantity;
     return (MtmProductData)new_data;
 }
 
@@ -65,10 +62,6 @@ ASElement createProduct ()
     new_product->product_id = 0;
     new_product->product_description = NULL;
     new_product->custom_data = NULL;
-    if(new_product->custom_data == NULL){
-        freeProduct(new_product);
-        return NULL;
-    }
     new_product->profit = 0;
     new_product->amount_type = 0;
     return (MtmProductData)new_product;
@@ -86,15 +79,16 @@ ASElement copyProduct (ASElement product)
         return NULL;
     } 
     new_product->product_id = ((Product)product)->product_id;
-    new_product->amount_type = ((Product)product)->amount_type; // ככה מעתיקים enum?
+    new_product->amount_type = ((Product)product)->amount_type; 
     new_product->profit = ((Product)product)->profit;
     new_product->custom_data = copyProductData(((Product)product)->custom_data);
-    if(new_product->custom_data == NULL) { //  אם הקצאת הקסטום דאטא לא עבדה זה מה שצריך? 
+    if(new_product->custom_data == NULL) {  
         free(new_product);
         return NULL;
     }
     if (((Product)product)->product_description == NULL ) {
-        return (ASElement)new_product;
+        free(new_product);
+        return NULL;
     }
     char* name_copy = malloc(strlen(((Product)product)->product_description)+1);
     if(name_copy == NULL){
