@@ -20,7 +20,7 @@ Matamikya matamikyaCreate()
    if(new_warehouse == NULL){
       return NULL;
    }
-   new_warehouse->storage =/*need to change the functions*/ asCreate(copyElement, freeElement, compareElements); //malloc!!! need to free 2
+   new_warehouse->storage =/*need to change the functions*/ asCreate(copyProduct, freeProduct, compareProduct); //malloc!!! need to free 2
    if(new_warehouse->storage == NULL){
       free(new_warehouse);  //free 1 in case of error
       return NULL;
@@ -33,7 +33,6 @@ Matamikya matamikyaCreate()
    return new_warehouse;
 }
 
-
 void matamikyaDestroy(Matamikya matamikya)
 {
    if(matamikya == NULL){
@@ -42,6 +41,16 @@ void matamikyaDestroy(Matamikya matamikya)
    asDestroy(matamikya->storage);    //free 2 at the end of program
    setDestroy(matamikya->orders);   //free 3 at the end of program
    free(matamikya);   //free 1 at the end of program
+}
+
+unsigned int mtmCreateNewOrder(Matamikya matamikya)
+{
+   unsigned int new_order_id = selectIdForNewOrder(matamikya->orders);
+   OrderInformation new_order = createNewEmptyOrder(new_order_id);
+   if(new_order == NULL){
+      return 0;
+   }
+   if(setAdd(matamikya->orders, new_order) == );
 }
 
 MatamikyaResult mtmChangeProductAmountInOrder(Matamikya matamikya, const unsigned int order_id,
