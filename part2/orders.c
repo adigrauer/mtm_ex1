@@ -1,7 +1,7 @@
 #include "set.h"
 #include "amount_set.h"
-//#include "matamikya.h"
 #include "orders.h"
+#include "util.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
@@ -15,20 +15,15 @@ struct order_information_t {
 };
 /////////////////////////////////////////////////
 
-
 //functions for amountset SingleItemInOrder
 /////////////////////////////////////////////////
 ASElement copySingleItemInOrder(ASElement item_id)
 {
-    if(item_id == NULL){
-        return NULL;
-    }
-    int* new_id = malloc(sizeof(int));  //malloc!!!! need to free 1
-    if(new_id == NULL){
-        return NULL;
-    }
-    *new_id = *(int*)item_id;
-    return (ASElement)new_id;
+    RETURN_VALUE_IF_TRUE(item_id, NULL); 
+    unsigned int* copy_id = malloc(sizeof(int));    //nalloc!!! need to free 1
+    RETURN_VALUE_IF_TRUE(copy_id, NULL); 
+    *copy_id = *(unsigned int*)item_id;
+    return (ASElement)copy_id;
 }
 
 void freeSingleleItemInOrder(ASElement item_id)
@@ -41,7 +36,7 @@ void freeSingleleItemInOrder(ASElement item_id)
 
 int compareSingleItemInOrder(ASElement item_id_1, ASElement item_id_2) //can be written withour malloc
 {
-    return (*(int*)item_id_1) - (*(int*)item_id_2);
+    return (*(unsigned int*)item_id_1) - (*(unsigned int*)item_id_2);
 }
 /////////////////////////////////////////////////
 
@@ -50,15 +45,15 @@ int compareSingleItemInOrder(ASElement item_id_1, ASElement item_id_2) //can be 
 /////////////////////////////////////////////////
 SetElement copyOrder(SetElement order)
 {
-    if(order == NULL){
-        return NULL;
-    }
+    RETURN_VALUE_IF_TRUE(order, NULL);
     OrderInformation new_order = malloc(sizeof(*new_order));   //malloc!!!! need to free 2
-    if (new_order == NULL){
-        return NULL;
-    }
+    RETURN_VALUE_IF_TRUE(new_order, NULL);
     new_order->order_id = ((OrderInformation)order)->order_id;
     new_order->list_items_in_order = asCopy(((OrderInformation)order)->list_items_in_order); //how copy know the functions of the element int* of items? //the list can be null
+    if(new_order->list_items_in_order == NULL){
+        free(new_order);
+        return NULL;
+    }
     return (SetElement)new_order;
 }
 
@@ -80,24 +75,10 @@ int compareOrder(SetElement order_1, SetElement order_2)
 
 //functions for orders set
 /////////////////////////////////////////////////
-unsigned int selectIdForNewOrder(Set orders) //does the set is classified???????
-{
-    OrderInformation ptr = setGetFirst(orders);
-    if (ptr == NULL){
-        return 1;   //orders is empty that the next order will be the first
-    }
-    while(ptr != NULL){
-        ptr = setGetNext(orders);
-    }
-    return ptr->order_id + 1;
-}
-
-OrderInformation createNewEmptyOrder(const unsigned int order_id) //the id will be from the function selectIdForNewOrder(Set orders)
+OrderInformation createNewEmptyOrder(const unsigned int order_id) 
 {
     OrderInformation new_order = malloc(sizeof(*new_order));   //malloc!!!! need to free 3, will be free by function freeOrder
-    if (new_order == NULL){
-        return NULL;
-    }
+    RETURN_VALUE_IF_TRUE(new_order, NULL);
     new_order->order_id = order_id;
     new_order->list_items_in_order = asCreate(copySingleItemInOrder, freeSingleleItemInOrder, compareSingleItemInOrder);
     if(new_order->list_items_in_order == NULL){
@@ -113,33 +94,27 @@ bool checkIfOrderExistById(Set orders, const unsigned int order_id)
         return false;
     }
     OrderInformation temp_order = createNewEmptyOrder(order_id);    //malloc!!!! need to free 6
-    if(setIsIn(orders, temp_order) == false){
-        setDestroy(temp_order->list_items_in_order);
-        free(temp_order);   //free 6
+    if(setIsIn(orders, (SetElement)temp_order) == false){
+        freeOrder(temp_order);   //free 6
         return false;
     }
-    setDestroy(temp_order->list_items_in_order);
-    free(temp_order);
+    freeOrder(temp_order); 
     return true;
 }
 
-AmountSet findSpecificOrderInOrders (Set orders, const unsigned int order_id)
+AmountSet findSpecificOrderInOrders(Set orders, const unsigned int order_id)
 {
-    OrderInformation temp_order = malloc(sizeof(*temp_order));   //malloc!!!! need to free 8
-    if (temp_order == NULL){
-        return NULL;
-    }
-    temp_order->order_id = order_id;
-    temp_order->list_items_in_order = NULL;
+    OrderInformation temp_order = createNewEmptyOrder(order_id);   //malloc!!!! need to free 8
+    RETURN_VALUE_IF_TRUE(temp_order, NULL);
     OrderInformation ptr = setGetFirst(orders);
     while (ptr != NULL){
-        if(compareOrder(ptr, temp_order) == 0){
-            free(temp_order);
+        if(compareOrder((SetElement)ptr, (SetElement)temp_order) == 0){
+            freeOrder(temp_order); 
             return ptr->list_items_in_order;
         }
         ptr = setGetNext(orders);
     }
-    free(temp_order);
+    freeOrder(temp_order); 
     return NULL;
 }
 /////////////////////////////////////////////////
@@ -148,22 +123,16 @@ AmountSet findSpecificOrderInOrders (Set orders, const unsigned int order_id)
 /////////////////////////////////////////////////
 AmountSetResult changeAmountOfItemInOrder(AmountSet list_item_in_order, const unsigned int product_id, const double amount) //use this function only if can change the amount according to the instructions
 {
-    int* item_id = malloc(sizeof(int));  //malloc!!!! need to free 5
-    if(item_id == NULL){
-        return AS_OUT_OF_MEMORY;
-    }
-    *item_id = product_id;
-    AmountSetResult result = asChangeAmount(list_item_in_order, item_id, amount);
-    free(item_id);
+    unsigned int* temp_item_id = createNewIdForItemInOrder(product_id);  //malloc!!!! need to free 5
+    AmountSetResult result = asChangeAmount(list_item_in_order, (ASElement)temp_item_id, amount);
+    free(temp_item_id);
     return result;
 }
 
-int* createNewIdForItemInOrder(const unsigned int product_id)
+unsigned int* createNewIdForItemInOrder(const unsigned int product_id)
 {
-    int* new_product_id = malloc(sizeof(int));  //malloc!!!! need to free 4, will be free by function freeSingleleItemInOrder
-    if(new_product_id == NULL){
-        return NULL;
-    }
+    unsigned int* new_product_id = malloc(sizeof(int));
+    RETURN_VALUE_IF_TRUE(new_product_id, NULL);
     *new_product_id = product_id;
     return new_product_id;
 }
@@ -173,12 +142,12 @@ bool checkIfItemExistInOrderById(AmountSet list_items_in_order, const unsigned i
     if(list_items_in_order == NULL){
         return false;
     }
-    int* temp_item_id = createNewIdForItemInOrder(product_id);  //malloc!!!! need to free 7
-    if(asContains(list_items_in_order, temp_item_id) == false){
+    unsigned int* temp_item_id = createNewIdForItemInOrder(product_id);
+    if(asContains(list_items_in_order, (SetElement)temp_item_id) == false){
         free(temp_item_id);
         return false;
     }
-    free(temp_item_id); //free 7
+    free(temp_item_id);
     return true;
 }
 
