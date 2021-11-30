@@ -4,11 +4,11 @@
 #include "matamikya.h"
 #include <stdlib.h>
 #include <string.h>
-
+#include "util.h"
 
 //typedef for structs
 typedef struct product_t *Product;
-typedef struct productData_t *ProductData;
+
 
 //functions for using generic ADT amount set for restoring items in storage
 Product createProduct ();

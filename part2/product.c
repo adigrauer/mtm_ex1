@@ -5,15 +5,13 @@
 struct product_t {
     char* product_description;
     unsigned int product_id;
-    ProductData custom_data;
+    MtmProductData custom_data;
     MatamikyaAmountType amount_type;
     double profit;
     MtmCopyData copy_function;
     MtmFreeData free_function;
     MtmGetProductPrice price_function;
 }; 
-
-
 
 Product createProduct ()
 {
@@ -25,7 +23,7 @@ Product createProduct ()
     new_product->product_description = NULL;
     new_product->custom_data = NULL;
     new_product->profit = 0;
-    new_product->amount_type = 0;
+    new_product->amount_type = MATAMIKYA_INTEGER_AMOUNT;
     new_product->copy_function = NULL;
     new_product->free_function = NULL;
     new_product->price_function = NULL;
@@ -49,7 +47,7 @@ ASElement copyProduct (ASElement product)
     new_product->custom_data = (((Product)product)-> copy_function)(((Product)product)->custom_data);
     if(new_product->custom_data == NULL) {  
         free(new_product);
-        return NULL;
+        return NULL; 
     }
     if (((Product)product)->product_description == NULL || ((Product)product)->copy_function == NULL ||
     ((Product)product)->free_function == NULL || ((Product)product)->price_function == NULL)
@@ -57,7 +55,7 @@ ASElement copyProduct (ASElement product)
         free(new_product);
         return NULL;
     }
-    char* name_copy = malloc(strlen(((Product)product)->product_description)+1);
+    char* name_copy = (char*)malloc(strlen(((Product)product)->product_description)+1);
     if(name_copy == NULL){
         freeProduct(new_product);
         return NULL;
@@ -91,9 +89,9 @@ bool productExist (AmountSet products_set, const unsigned int id) {
     if(products_set == NULL) {
         return  false;
     }
-    Product temp_product = createProduct ();
+    Product temp_product = createProduct();
     temp_product->product_id = id;
-    if (asContains(products_set ,temp_product) == true) {
+    if (asContains(products_set ,(ASElement)temp_product) == true) {
         freeProduct(temp_product);
         return true;
     }
@@ -106,13 +104,13 @@ bool registerProduct (Product new_product, const unsigned int id, const char *na
                               const MtmProductData customData, MtmCopyData copyData,
                               MtmFreeData freeData, MtmGetProductPrice prodPrice)
 {
-    new_product->product_id = id;
-    char* name_copy = malloc(strlen(name)+1);
+    char* name_copy = (char*)malloc(strlen(name)+1);
     if(name_copy == NULL){
         return false;
     }
     strcpy(name_copy, name);
     new_product->product_description = name_copy;
+    new_product->product_id = id;
     new_product->custom_data = copyData(customData);
     new_product->amount_type = amountType;
     new_product->copy_function = copyData;
@@ -128,18 +126,18 @@ MatamikyaAmountType getAmountType (Product product)
 
 Product getProductInStorage (AmountSet storage, const unsigned int id)
 {
-    Product temp_product = createProduct;
+    Product temp_product = createProduct();
     if (temp_product == NULL){
         return NULL;
     }
     temp_product->product_id = id;
-    Product ptr = asGetFirst(storage);
+    Product ptr = (Product)asGetFirst(storage);
     while (ptr != NULL){
         if(compareProduct((ASElement)ptr, (ASElement)temp_product) == 0){
             freeProduct(temp_product);
             return ptr;
         }
-        ptr = setGetNext(temp_product);
+        ptr = (Product)asGetNext(storage);
     }
     freeProduct(temp_product);
     return NULL;

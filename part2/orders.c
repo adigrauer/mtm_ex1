@@ -106,28 +106,45 @@ AmountSet findSpecificOrderInOrders(Set orders, const unsigned int order_id)
 {
     OrderInformation temp_order = createNewEmptyOrder(order_id);   //malloc!!!! need to free 8
     RETURN_VALUE_IF_TRUE(temp_order, NULL);
-    OrderInformation ptr = setGetFirst(orders);
+    OrderInformation ptr = (OrderInformation)setGetFirst(orders);
     while (ptr != NULL){
         if(compareOrder((SetElement)ptr, (SetElement)temp_order) == 0){
             freeOrder(temp_order); 
             return ptr->list_items_in_order;
         }
-        ptr = setGetNext(orders);
+        ptr = (OrderInformation)setGetNext(orders);
     }
     freeOrder(temp_order); 
     return NULL;
+}
+
+void clearProductFromAllOrders (Set orders, const unsigned id) 
+{
+    OrderInformation ptr_order = (OrderInformation)setGetFirst(orders);
+    if (ptr_order == NULL) {
+        return;
+    }
+    unsigned int* ptr_item;
+    while (ptr_order != NULL) {
+        if(checkIfItemExistInOrderById(ptr_order->list_items_in_order, id) == true){
+            ptr_item = findSpecificItemInOrders(ptr_order->list_items_in_order, id);
+            asDelete(ptr_order->list_items_in_order, (ASElement)ptr_item);
+            //do we need to delete an empty order???
+        }
+        ptr_order = (OrderInformation)setGetNext;
+    }
 }
 /////////////////////////////////////////////////
 
 //functions for items in order amount set
 /////////////////////////////////////////////////
-AmountSetResult changeAmountOfItemInOrder(AmountSet list_item_in_order, const unsigned int product_id, const double amount) //use this function only if can change the amount according to the instructions
+/*AmountSetResult changeAmountOfItemInOrder(AmountSet list_item_in_order, const unsigned int product_id, const double amount) //use this function only if can change the amount according to the instructions
 {
     unsigned int* temp_item_id = createNewIdForItemInOrder(product_id);  //malloc!!!! need to free 5
     AmountSetResult result = asChangeAmount(list_item_in_order, (ASElement)temp_item_id, amount);
-    free(temp_item_id);
+    freeSingleleItemInOrder((ASElement)temp_item_id);
     return result;
-}
+}*/
 
 unsigned int* createNewIdForItemInOrder(const unsigned int product_id)
 {
@@ -149,6 +166,22 @@ bool checkIfItemExistInOrderById(AmountSet list_items_in_order, const unsigned i
     }
     free(temp_item_id);
     return true;
+}
+
+unsigned int* findSpecificItemInOrders(AmountSet order, const unsigned int product_id)
+{
+    unsigned int* temp_item = createNewIdForItemInOrder(product_id);   //malloc!!!! need to free 8
+    RETURN_VALUE_IF_TRUE(temp_item, NULL);
+    unsigned int* ptr = (unsigned int*)asGetFirst(order);
+    while (ptr != NULL){
+        if(compareSingleItemInOrder((ASElement)ptr, (ASElement)temp_item) == 0){
+            freeSingleleItemInOrder(temp_item); 
+            return ptr;
+        }
+        ptr = (unsigned int*)asGetNext(order);
+    }
+    freeSingleleItemInOrder(temp_item); 
+    return NULL;
 }
 
 ////////////////////////////////////////////////
