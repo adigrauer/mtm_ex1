@@ -19,12 +19,11 @@ product.o: product.c product.h util.h  amount_set.h	\
 	$(CC) -c $(DEBUG_FLAG) $(CFLAGS) -o tournament.c
 
 matamikya.o: orders.c orders.h util.h amount_set.h product.c product.h \
-			matamikya.h set.h libmtm.a libas.a
+			matamikya.h set.h libmtm.a libas.a matamikya_print.c matamikya_print.h
 	$(CC) -c $(DEBUG_FLAG) $(CFLAGS) -o game.c 
 	
 
-$(TEST_OBJ): tests/chessSystemTestsExample.c matamikya.h		\
-			test_utilities.h
+$(TEST_OBJ): tests/chessSystemTestsExample.c matamikya.h test_utilities.h
 	$(CC) -c $(DEBUG_FLAG) $(CFLAGS) -o tests/chessSystemTestsExample.c
 	
 clean: 
