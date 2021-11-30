@@ -134,7 +134,7 @@ void clearProductFromAllOrders (Set orders, const unsigned id)
             asDelete(ptr_order->list_items_in_order, (ASElement)ptr_item);
             //do we need to delete an empty order???
         }
-        ptr_order = (OrderInformation)setGetNext;
+        ptr_order = (OrderInformation)setGetNext(orders);
     }
 }
 /////////////////////////////////////////////////
