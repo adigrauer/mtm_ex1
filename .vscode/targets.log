@@ -1,0 +1,377 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+# GNU Make 3.82
+# Built for x86_64-redhat-linux-gnu
+# Copyright (C) 2010  Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
+ 
+
+# Make data base, printed on Wed Dec  1 00:52:16 2021
+
+# Variables
+
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# automatic
+?F = $(notdir $?)
+# default
+.SHELLFLAGS := -c
+# environment
+QTDIR = /usr/lib64/qt-3.3
+# environment
+VSCODE_AGENT_FOLDER = /home/adigrauer/.vscode-server
+# environment
+VSCODE_LOG_NATIVE = false
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# makefile (from `makefile', line 2)
+EXE = matamikya_exe
+# automatic
+@F = $(notdir $@)
+# default
+MAKE_VERSION := 3.82
+# makefile
+CURDIR := /home/adigrauer/mtm/ex1/part2
+# makefile
+SHELL = /bin/sh
+# environment
+VSCODE_NLS_CONFIG = {"locale":"en","availableLanguages":{}}
+# environment
+_ = /usr/bin/make
+# makefile (from `makefile', line 5)
+CFLAGS = -std=c99 -Wall -pedantic-errors -Werror -DNDEBUG
+# makefile (from `makefile', line 1)
+MAKEFILE_LIST :=  makefile
+# environment
+HISTCONTROL = ignoredups
+# environment
+XDG_DATA_DIRS = /home/adigrauer/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share
+# environment
+VSCODE_VERBOSE_LOGGING = true
+# makefile (from `makefile', line 3)
+OBJS = orders.o product.o matamikya.o
+# environment
+LESSOPEN = ||/usr/bin/lesspipe.sh %s
+# environment
+VSCODE_CWD = /home/adigrauer
+# environment
+SSH_CONNECTION = 84.108.116.221 35191 132.68.32.76 22
+# environment
+PATH = /home/adigrauer/.vscode-server/bin/6cba118ac49a1b88332f312a8f67186f7f3c1643/bin:/usr/bin/:/home/adigrauer/.vscode-server/bin/6cba118ac49a1b88332f312a8f67186f7f3c1643/bin:/usr/lib64/qt-3.3/bin:/usr/bin/:/usr/local/bin:/usr/bin:/usr/local/pgsql/bin:/usr/local/sbin:/usr/sbin:/usr/local/pgsql/bin:/home/adigrauer/bin
+# environment
+QT_GRAPHICSSYSTEM_CHECKED = 1
+# environment
+XDG_RUNTIME_DIR = /run/user/26652
+# environment
+VSCODE_LOG_STACK = false
+# makefile (from `makefile', line 7)
+LIB = -L. -lmtm -lm -las
+# default
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver check-symlink
+# makefile (from `makefile', line 6)
+DEBUG_FLAG = -g 
+# automatic
+%F = $(notdir $%)
+# environment
+VSCODE_PIPE_LOGGING = true
+# environment
+PWD = /home/adigrauer/mtm/ex1/part2
+# environment
+VSCODE_IPC_HOOK_CLI = /run/user/26652/vscode-ipc-8eba85ec-1eb5-45af-bea6-69c143d60d44.sock
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/server/remoteExtensionHostProcess
+# environment
+HOME = /home/adigrauer
+# environment
+LD_LIBRARY_PATH = :/usr/local/pgsql/lib:/usr/local/pgsql/lib
+# environment
+LOGNAME = adigrauer
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+# automatic
++F = $(notdir $+)
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# environment
+HOSTNAME = csl3
+# environment
+MAKELEVEL := 0
+# default
+MAKE = $(MAKE_COMMAND)
+# default
+MAKECMDGOALS := all
+# environment
+SHLVL = 5
+# makefile (from `makefile', line 1)
+CC = gcc
+# environment
+XDG_SESSION_ID = 136236
+# environment
+USER = adigrauer
+# environment
+QTLIB = /usr/lib64/qt-3.3/lib
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# default
+MAKE_COMMAND := make
+# default
+.VARIABLES := 
+# automatic
+*F = $(notdir $*)
+# makefile
+MAKEFLAGS = Rrqp
+# environment
+MFLAGS = -Rrqp
+# environment
+SSH_CLIENT = 84.108.116.221 35191 22
+# environment
+MAIL = /var/spool/mail/adigrauer
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# environment
+BROWSER = /home/adigrauer/.vscode-server/bin/6cba118ac49a1b88332f312a8f67186f7f3c1643/bin/helpers/browser.sh
+# default
+MAKEFILES := 
+# automatic
+<F = $(notdir $<)
+# makefile (from `makefile', line 4)
+TEST_OBJ = matamikya_main.o matamikya_tests.o
+# environment
+LC_ALL = C
+# automatic
+^F = $(notdir $^)
+# default
+SUFFIXES := 
+# environment
+HISTSIZE = 1000
+# default
+.INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
+# environment
+VSCODE_INJECT_NODE_MODULE_LOOKUP_PATH = /home/adigrauer/.vscode-server/bin/6cba118ac49a1b88332f312a8f67186f7f3c1643/remote/node_modules
+# environment
+QTINC = /usr/lib64/qt-3.3/include
+# default
+.RECIPEPREFIX := 
+# makefile
+.DEFAULT_GOAL := matamikya_exe
+# environment
+LANG = C
+# environment
+VSCODE_EXTHOST_WILL_SEND_SOCKET = true
+# variable set hash-table stats:
+# Load=77/1024=8%, Rehash=0, Collisions=11/102=11%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# . (device 48, inode 90222885): 37 files, no impossibilities.
+
+# 37 files, no impossibilities in 1 directories.
+
+# Implicit Rules
+
+# No implicit rules.
+
+# Files
+
+matamikya_main.o: tests/matamikya_main.c tests/matamikya_tests.h tests/test_utilities.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from `makefile', line 32):
+	$(CC) -c $(DEBUG_FLAG) $(CFLAGS) tests/matamikya_main.c tests/matamikya_tests.h	\
+			tests/test_utilities.h
+	
+
+# Not a target:
+matamikya_print.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+orders.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+all:
+#  Command line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has not been updated.
+
+# Not a target:
+tests/test_utilities.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+product.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+orders.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+matamikya_exe: orders.o product.o matamikya.o matamikya_main.o matamikya_tests.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from `makefile', line 11):
+	$(CC) $(DEBUG_FLAG) $(CFLAGS) $(OBJS) $(TEST_OBJ) $(LIB) -o $(EXE) 
+
+# Not a target:
+.SUFFIXES:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+matamikya.o: matamikya.c orders.h util.h amount_set.h product.h matamikya.h set.h matamikya_print.c matamikya_print.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from `makefile', line 23):
+	$(CC) -c $(DEBUG_FLAG) $(CFLAGS)  matamikya.c orders.h util.h amount_set.h product.h \
+			matamikya.h set.h matamikya_print.c matamikya_print.h
+	
+
+# Not a target:
+makefile:
+#  Implicit rule search has been done.
+#  Last modified 2021-11-30 21:30:00.190265
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+product.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+tests/matamikya_tests.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+util.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+tests/matamikya_main.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+tests/matamikya_tests.h:
+ 
+make: *** No rule to make target `all'.  Stop.
+ 
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+matamikya.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+clean:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from `makefile', line 37):
+	rm -f $(EXE) $(OBJS) $(TEST_OBJ) 
+
+# Not a target:
+amount_set.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+orders.o: orders.c orders.h util.h amount_set.h set.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from `makefile', line 15):
+	$(CC) -c $(DEBUG_FLAG) $(CFLAGS) orders.c orders.h util.h amount_set.h set.h
+
+# Not a target:
+set.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+matamikya.h:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+product.o: product.c product.h util.h amount_set.h matamikya.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from `makefile', line 19):
+	$(CC) -c $(DEBUG_FLAG) $(CFLAGS) product.c product.h util.h  amount_set.h matamikya.h
+
+# Not a target:
+matamikya_print.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+matamikya_tests.o: tests/matamikya_tests.c tests/matamikya_tests.h tests/test_utilities.h
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from `makefile', line 28):
+	$(CC) -c $(DEBUG_FLAG) $(CFLAGS) tests/matamikya_tests.c tests/matamikya_tests.h	\
+			tests/test_utilities.h
+
+# files hash-table stats:
+# Load=26/1024=3%, Rehash=0, Collisions=1/71=1%
+# VPATH Search Paths
+
+# No `vpath' search paths.
+
+# No general (`VPATH' variable) search path.
+
+# # of strings in strcache: 0 / lookups = 90 / hits = 90
+# # of strcache buffers: 1 (* 8176 B/buffer = 8176 B)
+# strcache used: total = 0 (577) / max = 0 / min = 8176 / avg = 0
+# strcache free: total = 0 (7599) / max = 0 / min = 8176 / avg = 0
+
+# strcache hash-table stats:
+# Load=47/8192=1%, Rehash=0, Collisions=1/90=1%
+# Finished Make data base on Wed Dec  1 00:52:16 2021
+
+ 

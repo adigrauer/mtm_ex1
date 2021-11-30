@@ -124,6 +124,7 @@ MatamikyaResult mtmClearProduct(Matamikya matamikya, const unsigned int id)
         return MATAMIKYA_OUT_OF_MEMORY;
     }
     asDelete(matamikya->storage, (ASElement)ptr);
+    return MATAMIKYA_SUCCESS;
 }
 
 unsigned int mtmCreateNewOrder(Matamikya matamikya)
@@ -194,10 +195,10 @@ MatamikyaResult mtmChangeProductAmountInOrder(Matamikya matamikya, const unsigne
 }
 
 
-bool checkIfAmountInOrderValidForShipping(AmountSet items_in_order)
+/*bool checkIfAmountInOrderValidForShipping(AmountSet items_in_order)
 {
    
-}
+}*/
 
 MatamikyaResult mtmShipOrder(Matamikya matamikya, const unsigned int orderId)
 {
@@ -264,11 +265,11 @@ static MatamikyaResult checkProductAmountValid (const double amount, const Matam
     if (difference < 0) {
         difference *= -1;
     } 
-    if (amountType == MATAMIKYA_INTEGER_AMOUNT &&  difference < (1-INT_VALUE) && difference > INT_VALUE ) {
+    if ((amountType == MATAMIKYA_INTEGER_AMOUNT) &&  (difference < (1-INT_VALUE)) && (difference > INT_VALUE)) {
         return MATAMIKYA_INVALID_AMOUNT;
     }
-    if (amountType == MATAMIKYA_HALF_INTEGER_AMOUNT && (difference < ((1-INT_VALUE) - 0.5) && difference > INT_VALUE )
-    || (difference) > (0.5 + INT_VALUE) && difference < (1-INT_VALUE)) {
+    if (((amountType == MATAMIKYA_HALF_INTEGER_AMOUNT) && (difference < (1-INT_VALUE-0.5)) && (difference > INT_VALUE))
+    || ((difference > (0.5 + INT_VALUE)) && (difference < (1-INT_VALUE)))) {
         return MATAMIKYA_INVALID_AMOUNT;
     }
     return MATAMIKYA_SUCCESS;
@@ -305,6 +306,7 @@ static MatamikyaResult checkIfStorageNull(Matamikya matamikya)
     if(matamikya == NULL || matamikya->storage == NULL){
         return MATAMIKYA_NULL_ARGUMENT;
     }
+    return MATAMIKYA_SUCCESS;
 }
 
 static MatamikyaResult checkIfOrdersNull(Matamikya matamikya)
@@ -312,6 +314,7 @@ static MatamikyaResult checkIfOrdersNull(Matamikya matamikya)
     if(matamikya == NULL || matamikya->orders == NULL){
         return MATAMIKYA_NULL_ARGUMENT;
     }
+    return MATAMIKYA_SUCCESS;
 }
 
 

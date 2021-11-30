@@ -1,0 +1,13 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/home/adigrauer/mtm/ex1/part2'
+gcc -c -g  -std=c99 -Wall -pedantic-errors -Werror -DNDEBUG orders.c orders.h util.h amount_set.h set.h
+gcc -c -g  -std=c99 -Wall -pedantic-errors -Werror -DNDEBUG product.c product.h util.h  amount_set.h matamikya.h
+gcc -c -g  -std=c99 -Wall -pedantic-errors -Werror -DNDEBUG  matamikya.c orders.h util.h amount_set.h product.h \
+		matamikya.h set.h matamikya_print.c matamikya_print.h
+gcc -c -g  -std=c99 -Wall -pedantic-errors -Werror -DNDEBUG tests/matamikya_main.c tests/matamikya_tests.h	\
+		tests/test_utilities.h
+gcc -c -g  -std=c99 -Wall -pedantic-errors -Werror -DNDEBUG tests/matamikya_tests.c tests/matamikya_tests.h	\
+		tests/test_utilities.h
+gcc -g  -std=c99 -Wall -pedantic-errors -Werror -DNDEBUG orders.o product.o matamikya.o matamikya_main.o matamikya_tests.o -L. -lmtm -lm -las -o matamikya_exe 
+make: Leaving directory `/home/adigrauer/mtm/ex1/part2'
+ 
