@@ -12,6 +12,7 @@
 struct order_information_t {
     unsigned int order_id;
     AmountSet list_items_in_order; //its elements will be int*- the id product
+    double total_price;
 };
 /////////////////////////////////////////////////
 
@@ -49,6 +50,7 @@ SetElement copyOrder(SetElement order)
     OrderInformation new_order = malloc(sizeof(*new_order));   //malloc!!!! need to free 2
     RETURN_VALUE_IF_TRUE(new_order, NULL);
     new_order->order_id = ((OrderInformation)order)->order_id;
+    new_order->total_price = ((OrderInformation)order)->total_price;
     new_order->list_items_in_order = asCopy(((OrderInformation)order)->list_items_in_order); //how copy know the functions of the element int* of items? //the list can be null
     if(new_order->list_items_in_order == NULL){
         free(new_order);
@@ -80,6 +82,7 @@ OrderInformation createNewEmptyOrder(const unsigned int order_id)
     OrderInformation new_order = malloc(sizeof(*new_order));   //malloc!!!! need to free 3, will be free by function freeOrder
     RETURN_VALUE_IF_TRUE(new_order, NULL);
     new_order->order_id = order_id;
+    new_order->total_price = 0;
     new_order->list_items_in_order = asCreate(copySingleItemInOrder, freeSingleleItemInOrder, compareSingleItemInOrder);
     if(new_order->list_items_in_order == NULL){
         free(new_order); //free 3 in case of error
