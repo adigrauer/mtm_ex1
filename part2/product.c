@@ -88,6 +88,9 @@ int compareProduct (ASElement product_exist, ASElement product_to_add)
 }
 
 bool productExist (AmountSet products_set, const unsigned int id) {
+    if(products_set == NULL) {
+        return  false;
+    }
     Product temp_product = createProduct ();
     temp_product->product_id = id;
     if (asContains(products_set ,temp_product) == true) {
