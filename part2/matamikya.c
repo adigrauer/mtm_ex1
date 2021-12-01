@@ -3,7 +3,6 @@
 #include "matamikya.h"
 #include "orders.h"
 #include "product.h"
-#include "util.h"
 #include "matamikya_print.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -49,7 +48,7 @@ Matamikya matamikyaCreate()
         matamikyaDestroy(new_warehouse);
         return NULL;
     }
-    new_warehouse->last_orders_id = 0;
+    new_warehouse->last_orders_id = 1;
     return new_warehouse;
 }
 
@@ -232,7 +231,7 @@ MatamikyaResult mtmCancelOrder(Matamikya matamikya, const unsigned int orderId)
     freeOrder(temp_order);
     return MATAMIKYA_SUCCESS;
 }
-
+/*
 MatamikyaResult mtmPrintInventory(Matamikya matamikya, FILE *output)
 {
     if (checkIfStorageNull(matamikya) == MATAMIKYA_NULL_ARGUMENT || output == NULL) {
@@ -258,7 +257,7 @@ MatamikyaResult mtmPrintBestSelling(Matamikya matamikya, FILE *output)
     }
     ////here we need to use helper function and then print
 }
-
+*/
 
 ///////////static functions/////////
 static MatamikyaResult checkProductValid (Matamikya matamikya, const unsigned int id, const char *name,
@@ -294,9 +293,11 @@ static MatamikyaResult checkProductAmountValid (const double amount, const Matam
     if ((amountType == MATAMIKYA_INTEGER_AMOUNT) &&  (difference < (1-INT_VALUE)) && (difference > INT_VALUE)) {
         return MATAMIKYA_INVALID_AMOUNT;
     }
-    if (((amountType == MATAMIKYA_HALF_INTEGER_AMOUNT) && (difference < (1-INT_VALUE-0.5)) && (difference > INT_VALUE))
-    || ((difference > (0.5 + INT_VALUE)) && (difference < (1-INT_VALUE)))) {
-        return MATAMIKYA_INVALID_AMOUNT;
+    if (amountType == MATAMIKYA_HALF_INTEGER_AMOUNT){
+        if(((difference < (1-INT_VALUE-0.5)) && (difference > INT_VALUE))
+            || ((difference > (0.5 + INT_VALUE)) && (difference < (1-INT_VALUE)))) {
+            return MATAMIKYA_INVALID_AMOUNT;
+        }
     }
     return MATAMIKYA_SUCCESS;
 }
