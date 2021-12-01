@@ -233,6 +233,32 @@ MatamikyaResult mtmCancelOrder(Matamikya matamikya, const unsigned int orderId)
     return MATAMIKYA_SUCCESS;
 }
 
+MatamikyaResult mtmPrintInventory(Matamikya matamikya, FILE *output)
+{
+    if (checkIfStorageNull(matamikya) == MATAMIKYA_NULL_ARGUMENT || output == NULL) {
+        return MATAMIKYA_NULL_ARGUMENT;
+    }
+    Product ptr = (Product)asGetFirst(matamikya->storage);
+    fprintf (output, "Inventory Status:\n");
+    while (ptr != NULL) {
+        mtmPrintProductDetails(getProductName(ptr), getProductId(ptr), getProductAmount(matamikya->storage, ptr), getProductPrice(ptr), output);
+    }
+}
+
+
+MatamikyaResult mtmPrintBestSelling(Matamikya matamikya, FILE *output) 
+{
+    if (checkIfStorageNull(matamikya) == MATAMIKYA_NULL_ARGUMENT || output == NULL){
+        return MATAMIKYA_NULL_ARGUMENT;
+    }
+    Product best_selling_product = getBestSelling(matamikya->storage);
+    double max_profit = getProductIncome(best_selling_product);
+    if(max_profit == 0) {
+        fprintf (output, "Best Selling Product:\nnone");
+    }
+    ////here we need to use helper function and then print
+}
+
 
 ///////////static functions/////////
 static MatamikyaResult checkProductValid (Matamikya matamikya, const unsigned int id, const char *name,
