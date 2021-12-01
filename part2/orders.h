@@ -39,6 +39,7 @@ return value- if allocate was faild or order id does not exist in orders
 otherewise return pointer to OrderInformation */
 AmountSet findSpecificOrderInOrders (Set orders, const unsigned int order_id);
 void clearProductFromAllOrders (Set orders, const unsigned id);
+int getOrderId (OrderInformation order);
 ///////////////////////functions for item set amount in an order
 
 /* change the amount of item in specific order.
