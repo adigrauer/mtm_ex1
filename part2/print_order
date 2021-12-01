@@ -1,0 +1,53 @@
+MatamikyaResult mtmPrintOrder(Matamikya matamikya, const unsigned int orderId, FILE *output)
+{
+    if(checkIfOrdersNull(matamikya) == MATAMIKYA_NULL_ARGUMENT || output == NULL){
+        return MATAMIKYA_NULL_ARGUMENT;
+    }
+    if(checkIfOrderExistById(matamikya->orders, orderId) == false){
+        return MATAMIKYA_ORDER_NOT_EXIST;
+    }
+    OrderInformation order = findOrderForChangeTotalPrice(matamikya->orders, orderId);
+    calculateTotalPrcieOfOrder(matamikya, orderId);
+    if(getTotalPriceForOrder (order) == 0){
+        mtmPrintOrderHeading(orderId, output);
+        mtmPrintOrderSummary(getTotalPriceForOrder (order), output);
+        return MATAMIKYA_SUCCESS;
+    }
+    mtmPrintOrderHeading(orderId, output);
+    double price = 0;
+    double amount = 0;
+    AmountSet current_order = findSpecificOrderInOrders(matamikya->orders, orderId);
+    unsigned int* ptr_item = (unsigned int*)asGetFirst(current_order);
+    Product temp_product = NULL;
+    char* name = NULL;
+    while(ptr_item != NULL){
+        getProductInStorage(matamikya->storage, *ptr_item);
+        price = calculatePriceForAmount(temp_product, amount);
+        asGetAmount(current_order, ASElement(ptr_item), &amount);
+        name = getProductNameById(matamikya->storage, *ptr_item);
+        mtmPrintProductDetails(name, orderId, amount, price, output);
+        ptr = (OrderInformation)setGetNext(matamikya->orders);
+    }
+    mtmPrintOrderSummary(getTotalPriceForOrder (order), output);
+    return MATAMIKYA_SUCCESS;
+}
+
+///////////static
+void calculateTotalPrcieOfOrder(Matamikya matamikya, const unsigned int order_id)
+{
+    AmountSet current_order = findSpecificOrderInOrders(matamikya->orders, order_id);
+    if(asGetSize(current_order) == 0){
+        return;
+    }
+    unsigned int* ptr_product_id = (unsigned int*)asGetFirst(current_order);
+    Product temp_product = NULL;
+    OrderInformation temp_order = findOrderForChangeTotalPrice(matamikya->orders, order_id);
+    double amount = 0;
+    double price_to_add = 0;
+    while (ptr_product_id != NULL){
+        asGetAmount(current_order, ASElement(ptr_product_id), &amount);
+        temp_product = getProductInStorage(matamikya->storage, *ptr_product_id);
+        price_to_add += calculatePriceForAmount(temp_product, amount);
+    }
+    changeTotalPriceInOrder(temp_order, price_to_add);
+}

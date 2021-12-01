@@ -47,6 +47,10 @@ OrderInformation findOrderForChangeTotalPrice(Set orders, const unsigned int ord
 void clearProductFromAllOrders (Set orders, const unsigned id);
 
 int getOrderId (OrderInformation order);
+
+void changeTotalPriceInOrder (OrderInformation order, double price_to_add);
+
+double getTotalPriceForOrder (OrderInformation order);
 ///////////////////////functions for item set amount in an order
 
 /* change the amount of item in specific order.
@@ -63,5 +67,6 @@ returns value- NULL if allocated was faild, otherwise unsigned int* ewith the id
 unsigned int* createNewIdForItemInOrder(const unsigned int product_id);
 
 unsigned int* findSpecificItemInOrders(AmountSet order, const unsigned int product_id);
+
 
 #endif /*ORDERS_H*/
