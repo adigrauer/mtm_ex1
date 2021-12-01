@@ -132,6 +132,24 @@ AmountSet findSpecificOrderInOrders(Set orders, const unsigned int order_id)
     return NULL;
 }
 
+OrderInformation findOrderForChangeTotalPrice(Set orders, const unsigned int order_id)
+{
+    OrderInformation temp_order = createNewEmptyOrder(order_id);   //malloc!!!! need to free 8
+    if(temp_order == NULL){
+        return NULL;
+    }
+    OrderInformation ptr = (OrderInformation)setGetFirst(orders);
+    while (ptr != NULL){
+        if(compareOrder((SetElement)ptr, (SetElement)temp_order) == 0){
+            freeOrder(temp_order); 
+            return ptr;
+        }
+        ptr = (OrderInformation)setGetNext(orders);
+    }
+    freeOrder(temp_order); 
+    return NULL;
+}
+
 void clearProductFromAllOrders (Set orders, const unsigned id) 
 {
     OrderInformation ptr_order = (OrderInformation)setGetFirst(orders);
@@ -149,21 +167,15 @@ void clearProductFromAllOrders (Set orders, const unsigned id)
     }
 }
 
-int getOrderId (OrderInformation order){
+int getOrderId (OrderInformation order)
+{
     return order->order_id;
 }
+
 /////////////////////////////////////////////////
 
 //functions for items in order amount set
 /////////////////////////////////////////////////
-/*AmountSetResult changeAmountOfItemInOrder(AmountSet list_item_in_order, const unsigned int product_id, const double amount) //use this function only if can change the amount according to the instructions
-{
-    unsigned int* temp_item_id = createNewIdForItemInOrder(product_id);  //malloc!!!! need to free 5
-    AmountSetResult result = asChangeAmount(list_item_in_order, (ASElement)temp_item_id, amount);
-    freeSingleleItemInOrder((ASElement)temp_item_id);
-    return result;
-}*/
-
 unsigned int* createNewIdForItemInOrder(const unsigned int product_id)
 {
     unsigned int* new_product_id = (unsigned int*)malloc(sizeof(int));
@@ -208,5 +220,5 @@ unsigned int* findSpecificItemInOrders(AmountSet order, const unsigned int produ
 
 ////////////////////////////////////////////////
 
-//max free right now is 7!!!!!!!!!!
+
 

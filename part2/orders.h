@@ -37,8 +37,15 @@ bool checkIfOrderExistById(Set orders, const unsigned int order_id);
 /* return pointer to OrderInformation of an order in set orders 
 return value- if allocate was faild or order id does not exist in orders
 otherewise return pointer to OrderInformation */
+
+///////////need to change the name to -GetListOfItemsInSpecificOrder
 AmountSet findSpecificOrderInOrders (Set orders, const unsigned int order_id);
+
+///////////need to change the name to -findSpecificOrderInOrders
+OrderInformation findOrderForChangeTotalPrice(Set orders, const unsigned int order_id);
+
 void clearProductFromAllOrders (Set orders, const unsigned id);
+
 int getOrderId (OrderInformation order);
 ///////////////////////functions for item set amount in an order
 
