@@ -81,6 +81,7 @@ MatamikyaResult mtmNewProduct(Matamikya matamikya, const unsigned int id, const 
     }
     asRegister(matamikya->storage, (ASElement)new_product);
     asChangeAmount(matamikya->storage, (ASElement)new_product, amount);
+    freeProduct(new_product); //this is what we added
     return MATAMIKYA_SUCCESS;
  }
 
@@ -175,6 +176,7 @@ MatamikyaResult mtmChangeProductAmountInOrder(Matamikya matamikya, const unsigne
         }
         unsigned int* new_product_id = createNewIdForItemInOrder(productId);
         asRegister(ptr_order, (ASElement)new_product_id);
+        freeSingleleItemInOrder(new_product_id); //this is what we added
     }
     //need to check how getamount works, doest it use the compare function????
     unsigned int* ptr_product_id = findSpecificItemInOrders(ptr_order, productId);
