@@ -75,20 +75,25 @@ void freeProduct(ASElement product){
     if (product == NULL) {
         return;
     }
-    free(((Product)product)->product_description);
-    ((Product)product)->free_function(((Product)product)->custom_data);
+    if(((Product)product)->product_description != NULL){
+        free(((Product)product)->product_description);
+        (((Product)product)->free_function)(((Product)product)->custom_data);
+    }
     free ((Product)product);
 }
 
 int compareProduct (ASElement product_exist, ASElement product_to_add)
 {
-    return (((Product)product_exist)->product_id) - (((Product)product_exist)->product_id);
+    /*if((((Product)product_exist)->product_id) - (((Product)product_to_add)->product_id) == 0){
+        printf("%s", ((Product)product_exist)->product_description);
+    }*/
+    return (((Product)product_exist)->product_id) - (((Product)product_to_add)->product_id);
 }
 
 bool productExist (AmountSet products_set, const unsigned int id) {
-    if(products_set == NULL) {
+    /*if(products_set == NULL) {
         return  false;
-    }
+    }*/
     Product temp_product = createProduct();
     temp_product->product_id = id;
     if (asContains(products_set ,(ASElement)temp_product) == true) {
