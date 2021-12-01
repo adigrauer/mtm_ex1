@@ -84,9 +84,6 @@ void freeProduct(ASElement product){
 
 int compareProduct (ASElement product_exist, ASElement product_to_add)
 {
-    /*if((((Product)product_exist)->product_id) - (((Product)product_to_add)->product_id) == 0){
-        printf("%s", ((Product)product_exist)->product_description);
-    }*/
     return (((Product)product_exist)->product_id) - (((Product)product_to_add)->product_id);
 }
 
@@ -167,6 +164,7 @@ Product getBestSelling (AmountSet storage)
         ptr = (Product)asGetNext(storage);
     }
     return max_profit_ptr;
+    }
 }
 
 char* getProductName (Product product)
@@ -174,12 +172,18 @@ char* getProductName (Product product)
     return product->product_description;
 }
 
+char* getProductNameById (AmountSet storage, unsigned int id)
+{
+    Product product = getProductInStorage(storage, id);
+    return getProductName(product);
+}
+
 unsigned int getProductId (Product product)
 {
     return product->product_id;
 }
 
-unsigned int getProductIncome (Product product)
+double getProductIncome (Product product)
 {
     return product->profit;
 }
@@ -194,4 +198,50 @@ double getProductAmount (AmountSet storage, Product product)
     double amount;
     asGetAmount(storage, (ASElement)product, &amount);
     return amount;
+}
+
+Product getNextMinimalProductById (AmountSet storage, Product last_printed_product) 
+{
+    Product ptr = (Product)asGetFirst(storage);
+    unsigned int current_min_id = last_printed_product->product_id;
+    Product current_min_id_product = last_printed_product;
+    while (ptr != NULL){
+        if (ptr->product_id > last_printed_product->product_id && ptr->product_id < current_min_id) {
+            current_min_id = ptr->product_id;
+            current_min_id_product = ptr;
+        }
+        ptr = (Product)asGetNext(storage);
+    }
+    if (current_min_id = last_printed_product-> product_id) {
+        return NULL;
+    }
+    return current_min_id_product;
+}
+
+Product getMinIdProduct (AmountSet storage)
+{
+    Product ptr = (Product)asGetFirst(storage);
+    if (ptr == NULL){
+        return NULL;
+    }
+    unsigned int current_min_id = ptr->product_id;
+    Product current_min_id_product = ptr;
+    while (ptr != NULL) {
+        if(ptr->product_id < current_min_id){
+            current_min_id = ptr->product_id;
+            current_min_id_product = ptr;
+        }
+        ptr = (Product)asGetNext(storage);
+    }
+    return current_min_id_product;
+}
+
+double calculatePriceForAmount (Product product, double amount)
+{
+    return (product->price_function)(product->custom_data, amount);
+}
+
+void updateProfitForProduct (Product product, double amount)
+{
+    product->profit += ((product->price_function)(product->custom_data, amount));
 }

@@ -4,7 +4,7 @@
 #include "matamikya.h"
 #include <stdlib.h>
 #include <string.h>
-#include "util.h"
+
 
 //typedef for structs
 typedef struct product_t *Product;
@@ -23,14 +23,18 @@ bool registerProduct (Product new_product, const unsigned int id, const char *na
 Product getProductInStorage (AmountSet storage, const unsigned int id);
 MatamikyaAmountType getAmountType (Product product);
 Product getBestSelling (AmountSet storage);
+Product getNextMinimalProductById (AmountSet storage, Product last_printed_product);
+Product getMinIdProduct (AmountSet storage);
 
 
 ////get information for matamikya
 char* getProductName (Product product);
+char* getProductNameById (AmountSet storage, unsigned int id);
 unsigned int getProductId (Product product);
-unsigned int getProductIncome (Product product);
+double getProductIncome (Product product);
 double getProductPrice (Product product);
 double getProductAmount (AmountSet storage,Product product);
-
+double calculatePriceForAmount (Product product, double amount);
+void updateProfitForProduct (Product product, double amount);
 #endif /*PRODUCT_H*/
 

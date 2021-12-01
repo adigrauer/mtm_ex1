@@ -30,6 +30,9 @@ static MatamikyaResult checkProductNameValid (const char *name);
 static MatamikyaResult checkProductAmountSufficient (AmountSet storage, const double amount, Product product);
 static MatamikyaResult checkIfStorageNull (Matamikya matamikya);
 static MatamikyaResult checkIfOrdersNull(Matamikya matamikya);
+static void updateShippedOrder(AmountSet storage, AmountSet order);
+static bool checkIfOrderIsValidForShipping (AmountSet storage, AmountSet order);
+//static void calculateTotalPriceOfOrder(Matamikya matamikya, const unsigned int order_id);
 /////////////////////////////////////////////////
 
 Matamikya matamikyaCreate()
@@ -203,7 +206,7 @@ MatamikyaResult mtmChangeProductAmountInOrder(Matamikya matamikya, const unsigne
 
 MatamikyaResult mtmShipOrder(Matamikya matamikya, const unsigned int orderId)
 {
-    if(matamikya == NULL){
+    if(checkIfStorageNull(matamikya) == MATAMIKYA_NULL_ARGUMENT || checkIfOrdersNull(matamikya) == MATAMIKYA_NULL_ARGUMENT){
         return MATAMIKYA_NULL_ARGUMENT;
     }
     if(checkIfOrderExistById(matamikya->orders, orderId) == false){
@@ -213,8 +216,12 @@ MatamikyaResult mtmShipOrder(Matamikya matamikya, const unsigned int orderId)
     if(items_in_order == NULL){
         return MATAMIKYA_OUT_OF_MEMORY;
     }
-
-    return MATAMIKYA_INSUFFICIENT_AMOUNT;
+    if(checkIfOrderIsValidForShipping(matamikya->storage, items_in_order) == false){
+        return MATAMIKYA_INSUFFICIENT_AMOUNT;
+    }
+    updateShippedOrder(matamikya->storage, items_in_order);
+    mtmCancelOrder(matamikya, orderId);
+    return MATAMIKYA_SUCCESS;
 }
 
 MatamikyaResult mtmCancelOrder(Matamikya matamikya, const unsigned int orderId)
@@ -239,13 +246,52 @@ MatamikyaResult mtmPrintInventory(Matamikya matamikya, FILE *output)
     if (checkIfStorageNull(matamikya) == MATAMIKYA_NULL_ARGUMENT || output == NULL) {
         return MATAMIKYA_NULL_ARGUMENT;
     }
-    Product ptr = (Product)asGetFirst(matamikya->storage);
+    Product ptr_current_min = getMinIdProduct(matamikya->storage);
     fprintf (output, "Inventory Status:\n");
-    while (ptr != NULL) {
-        mtmPrintProductDetails(getProductName(ptr), getProductId(ptr), getProductAmount(matamikya->storage, ptr), getProductPrice(ptr), output);
+    if (ptr_current_min == NULL) {
+        return MATAMIKYA_SUCCESS;
     }
+    while (ptr_current_min != NULL) {
+        ptr_current_min = getNextMinimalProductById(matamikya->storage, ptr_current_min);
+        mtmPrintProductDetails(getProductName(ptr_current_min), getProductId(ptr_current_min), 
+        getProductAmount(matamikya->storage, ptr_current_min), getProductPrice(ptr_current_min), output);
+    }
+    return MATAMIKYA_SUCCESS;
 }
 
+MatamikyaResult mtmPrintOrder(Matamikya matamikya, const unsigned int orderId, FILE *output)
+{
+    if(checkIfOrdersNull(matamikya) == MATAMIKYA_NULL_ARGUMENT  || checkIfStorageNull(matamikya) == MATAMIKYA_NULL_ARGUMENT || output == NULL){
+        return MATAMIKYA_NULL_ARGUMENT;
+    }
+    if(checkIfOrderExistById(matamikya->orders, orderId) == false){
+        return MATAMIKYA_ORDER_NOT_EXIST;
+    }
+    OrderInformation order = findOrderForChangeTotalPrice(matamikya->orders, orderId);
+    calculateTotalPriceOfOrder(matamikya, orderId);
+    if(getTotalPriceForOrder (order) == 0){
+        mtmPrintOrderHeading(orderId, output);
+        mtmPrintOrderSummary(getTotalPriceForOrder (order), output);
+        return MATAMIKYA_SUCCESS;
+    } //need to print by order!!!!!
+    mtmPrintOrderHeading(orderId, output);
+    double price = 0;
+    double amount = 0;
+    AmountSet current_order = findSpecificOrderInOrders(matamikya->orders, orderId);
+    unsigned int* ptr_item = (unsigned int*)asGetFirst(current_order);
+    Product temp_product = NULL; 
+    char* name = NULL;
+    while(ptr_item != NULL){
+        temp_product = getProductInStorage(matamikya->storage, *ptr_item);
+        asGetAmount(current_order, ASElement(ptr_item), &amount);
+        price = calculatePriceForAmount(temp_product, amount);
+        name = getProductNameById(matamikya->storage, *ptr_item);
+        mtmPrintProductDetails(name, orderId, amount, price, output);
+        ptr_item = (unsigned int*)asGetNext(current_order);
+    }
+    mtmPrintOrderSummary(getTotalPriceForOrder (order), output);
+    return MATAMIKYA_SUCCESS;
+}
 
 MatamikyaResult mtmPrintBestSelling(Matamikya matamikya, FILE *output) 
 {
@@ -256,8 +302,10 @@ MatamikyaResult mtmPrintBestSelling(Matamikya matamikya, FILE *output)
     double max_profit = getProductIncome(best_selling_product);
     if(max_profit == 0) {
         fprintf (output, "Best Selling Product:\nnone");
+        return MATAMIKYA_SUCCESS;
     }
-    ////here we need to use helper function and then print
+    mtmPrintIncomeLine(getProductName(best_selling_product), getProductId(best_selling_product), max_profit, output);
+    return MATAMIKYA_SUCCESS;
 }
 */
 
@@ -346,9 +394,54 @@ static MatamikyaResult checkIfOrdersNull(Matamikya matamikya)
     return MATAMIKYA_SUCCESS;
 }
 
+static bool checkIfOrderIsValidForShipping (AmountSet storage, AmountSet order)
+{
+    unsigned int* ptr = (unsigned int*)asGetFirst(order);
+    double amount_to_reduce_from_storage = 0;
+    Product ptr_to_storage_product = NULL;
+    while (ptr != NULL) {
+        asGetAmount(order, ptr, &amount_to_reduce_from_storage);
+        ptr_to_storage_product = getProductInStorage(storage, *ptr);
+        if (checkProductAmountSufficient(storage, (-amount_to_reduce_from_storage), ptr_to_storage_product) == MATAMIKYA_INSUFFICIENT_AMOUNT){
+            return false;
+        }
+        ptr = (unsigned int*)asGetNext(order);
+    }
+    return true;
+}
 
 
+static void updateShippedOrder(AmountSet storage, AmountSet order)
+{
+    unsigned int* ptr = (unsigned int*)asGetFirst(order);
+    double amount_to_reduce_from_storage = 0;
+    Product ptr_to_storage_product = NULL;
+    while (ptr != NULL) {
+        asGetAmount(order, ptr, &amount_to_reduce_from_storage);
+        ptr_to_storage_product = getProductInStorage(storage, *ptr);
+        asChangeAmount(storage, (ASElement)ptr_to_storage_product, -amount_to_reduce_from_storage);
+        updateProfitForProduct(ptr_to_storage_product, amount_to_reduce_from_storage);
+        ptr = (unsigned int*)asGetNext(order);
+    }
+}
 
-
-
-
+/*
+static void calculateTotalPriceOfOrder(Matamikya matamikya, const unsigned int order_id)
+{
+    AmountSet current_order = findSpecificOrderInOrders(matamikya->orders, order_id);
+    if(asGetSize(current_order) == 0){
+        return;
+    }
+    unsigned int* ptr_product_id = (unsigned int*)asGetFirst(current_order);
+    Product temp_product = NULL;
+    OrderInformation temp_order = findOrderForChangeTotalPrice(matamikya->orders, order_id);
+    double amount = 0;
+    double price_to_add = 0;
+    while (ptr_product_id != NULL){
+        asGetAmount(current_order, (ASElement)ptr_product_id, &amount);
+        temp_product = getProductInStorage(matamikya->storage, *ptr_product_id);
+        price_to_add += calculatePriceForAmount(temp_product, amount);
+    }
+    changeTotalPriceInOrder(temp_order, price_to_add);
+}
+*/
