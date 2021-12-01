@@ -159,6 +159,11 @@ Product getBestSelling (AmountSet storage)
         if(ptr->profit > max_profit_ptr->profit){
             max_profit_ptr = ptr;
         }
+        if(ptr->profit = max_profit_ptr->profit){
+            if (ptr->product_id < max_profit_ptr->product_id) {
+                max_profit_ptr = ptr;
+            }
+            
         ptr = (Product)asGetNext(storage);
     }
     return max_profit_ptr;
