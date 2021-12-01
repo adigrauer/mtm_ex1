@@ -22,6 +22,15 @@ bool registerProduct (Product new_product, const unsigned int id, const char *na
                               MtmFreeData freeData, MtmGetProductPrice prodPrice);
 Product getProductInStorage (AmountSet storage, const unsigned int id);
 MatamikyaAmountType getAmountType (Product product);
+Product getBestSelling (AmountSet storage);
+
+
+////get information for matamikya
+char* getProductName (Product product);
+unsigned int getProductId (Product product);
+unsigned int getProductIncome (Product product);
+double getProductPrice (Product product);
+double getProductAmount (AmountSet storage,Product product);
 
 #endif /*PRODUCT_H*/
 

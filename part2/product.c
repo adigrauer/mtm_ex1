@@ -142,3 +142,46 @@ Product getProductInStorage (AmountSet storage, const unsigned int id)
     freeProduct(temp_product);
     return NULL;
 }
+
+Product getBestSelling (AmountSet storage)
+{
+    Product ptr = (Product)asGetFirst(storage);
+    if (ptr == NULL){
+        return ptr;
+    }
+    Product max_profit_ptr = ptr;
+    while (ptr != NULL){
+        if(ptr->profit > max_profit_ptr->profit){
+            max_profit_ptr = ptr;
+        }
+        ptr = (Product)asGetNext(storage);
+    }
+    return max_profit_ptr;
+}
+
+char* getProductName (Product product)
+{
+    return product->product_description;
+}
+
+unsigned int getProductId (Product product)
+{
+    return product->product_id;
+}
+
+unsigned int getProductIncome (Product product)
+{
+    return product->profit;
+}
+
+double getProductPrice (Product product)
+{
+    return product->price_function(product->custom_data, 1); //מה היא יחידת מידה???
+}
+
+double getProductAmount (AmountSet storage, Product product)
+{
+    double amount;
+    asGetAmount(storage, (ASElement)product, &amount);
+    return amount;
+}
