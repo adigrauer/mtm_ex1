@@ -57,7 +57,7 @@ static void updateShippedOrder(AmountSet storage, AmountSet order);
 /*checks if order is legal by checking if the amount in the storage is sufficient*/ 
 static bool checkIfOrderIsValidForShipping (AmountSet storage, AmountSet order);
 
-//static void calculateTotalPriceOfOrder(Matamikya matamikya, const unsigned int order_id);
+static void calculateTotalPriceOfOrder(Matamikya matamikya, const unsigned int order_id);
 /////////////////////////////////////////////////
 
 ////////MATAMIKYA FUNCTIONS IMPLEMENTATION///////
@@ -289,44 +289,29 @@ MatamikyaResult mtmPrintOrder(Matamikya matamikya, const unsigned int orderId, F
         return MATAMIKYA_ORDER_NOT_EXIST;
     }
     OrderInformation order = findSpecificOrderInOrders(matamikya->orders, orderId);
+    AmountSet list_items_in_specific_order = GetListOfItemsInSpecificOrder (matamikya->orders, orderId);
     calculateTotalPriceOfOrder(matamikya, orderId);
-    if(asGetSize(order) == 0){
+    int order_size = asGetSize(list_items_in_specific_order);
+    if(order_size == 0){
         mtmPrintOrderHeading(orderId, output);
         mtmPrintOrderSummary(getTotalPriceForOrder(order), output);
         return MATAMIKYA_SUCCESS;
     } 
     mtmPrintOrderHeading(orderId, output);
-    unsigned int* ptr_current_min = getMinIdItemInOrder(order);
+    unsigned int* ptr_current_min = getMinIdItemInOrder(list_items_in_specific_order);
     Product temp_product = NULL;
     double amount = 0;
     while(ptr_current_min != NULL){
         temp_product = getProductInStorage(matamikya->storage, *ptr_current_min);
-        asGetAmount(order, (ASElement)ptr_current_min, &amount);
-        mtmPrintProductDetails(getProductNameById(matamikya->storage, *ptr_current_min), orderId,
+        asGetAmount(list_items_in_specific_order, (ASElement)ptr_current_min, &amount);
+        mtmPrintProductDetails(getProductNameById(matamikya->storage, *ptr_current_min), *ptr_current_min,
             amount, calculatePriceForAmount(temp_product, amount), output);
-        ptr_current_min = getNextMinimalItemInOrderById(order, ptr_current_min); 
+        ptr_current_min = getNextMinimalItemInOrderById(list_items_in_specific_order, ptr_current_min); 
     }
+    mtmPrintOrderSummary(getTotalPriceForOrder(order), output);
     return MATAMIKYA_SUCCESS;
 }
-/*
-    double price = 0;
-    double amount = 0;
-    AmountSet current_order = GetListOfItemsInSpecificOrder(matamikya->orders, orderId);
-    unsigned int* ptr_item = (unsigned int*)asGetFirst(current_order);
-    Product temp_product = NULL; 
-    char* name = NULL;
-    while(ptr_item != NULL){
-        temp_product = getProductInStorage(matamikya->storage, *ptr_item);
-        asGetAmount(current_order, ASElement(ptr_item), &amount);
-        price = calculatePriceForAmount(temp_product, amount);
-        name = getProductNameById(matamikya->storage, *ptr_item);
-        mtmPrintProductDetails(name, orderId, amount, price, output);
-        ptr_item = (unsigned int*)asGetNext(current_order);
-    }
-    mtmPrintOrderSummary(getTotalPriceForOrder (order), output);
-    return MATAMIKYA_SUCCESS;
-}
-*/
+
 MatamikyaResult mtmPrintBestSelling(Matamikya matamikya, FILE *output) 
 {
     if (checkIfStorageNull(matamikya) == MATAMIKYA_NULL_ARGUMENT || output == NULL){
@@ -461,7 +446,6 @@ static void updateShippedOrder(AmountSet storage, AmountSet order)
     }
 }
 
-/*
 static void calculateTotalPriceOfOrder(Matamikya matamikya, const unsigned int order_id)
 {
     AmountSet current_order =GetListOfItemsInSpecificOrder(matamikya->orders, order_id);
@@ -477,8 +461,9 @@ static void calculateTotalPriceOfOrder(Matamikya matamikya, const unsigned int o
         asGetAmount(current_order, (ASElement)ptr_product_id, &amount);
         temp_product = getProductInStorage(matamikya->storage, *ptr_product_id);
         price_to_add += calculatePriceForAmount(temp_product, amount);
+        ptr_product_id = (unsigned int*)asGetNext(current_order);
     }
     changeTotalPriceInOrder(temp_order, price_to_add);
 }
-*/
+
 /////////////////////////////////////////////////
