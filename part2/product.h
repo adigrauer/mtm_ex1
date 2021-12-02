@@ -9,7 +9,6 @@
 //typedef for structs
 typedef struct product_t *Product;
 
-
 //functions for using generic ADT amount set for restoring items in storage
 
 /*allocates new memory for product, product values are null or empty after this*/
@@ -54,10 +53,6 @@ unsigned int getProductId (Product product);
 double getProductIncome (Product product);
 double getProductPrice (Product product);
 double getProductAmount (AmountSet storage,Product product);
-
-/* for case that we will need to print all best selling
-Product getBestSellingOfMinimalIdProduct (AmountSet storage);
-Product getNextBestSelling (AmountSet storage, Product last_best_selling_printed); */
 
 #endif /*PRODUCT_H*/
 
