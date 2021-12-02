@@ -121,10 +121,6 @@ bool registerProduct (Product new_product, const unsigned int id, const char *na
     return true;
 }
 
-MatamikyaAmountType getAmountType (Product product)
-{
-    return product->amount_type;
-}
 
 Product getProductInStorage (AmountSet storage, const unsigned int id)
 {
@@ -145,6 +141,7 @@ Product getProductInStorage (AmountSet storage, const unsigned int id)
     return NULL;
 }
 
+
 Product getBestSelling (AmountSet storage)
 {
     Product ptr = (Product)asGetFirst(storage);
@@ -156,67 +153,47 @@ Product getBestSelling (AmountSet storage)
         if(ptr->profit > max_profit_ptr->profit){
             max_profit_ptr = ptr;
         }
-        if(ptr->profit = max_profit_ptr->profit){
+        if(ptr->profit == max_profit_ptr->profit){
             if (ptr->product_id < max_profit_ptr->product_id) {
                 max_profit_ptr = ptr;
             }
-            
+        }    
         ptr = (Product)asGetNext(storage);
     }
     return max_profit_ptr;
-    }
 }
 
-char* getProductName (Product product)
-{
-    return product->product_description;
-}
-
-char* getProductNameById (AmountSet storage, unsigned int id)
-{
-    Product product = getProductInStorage(storage, id);
-    return getProductName(product);
-}
-
-unsigned int getProductId (Product product)
-{
-    return product->product_id;
-}
-
-double getProductIncome (Product product)
-{
-    return product->profit;
-}
-
-double getProductPrice (Product product)
-{
-    return product->price_function(product->custom_data, 1); //מה היא יחידת מידה???
-}
-
-double getProductAmount (AmountSet storage, Product product)
-{
-    double amount;
-    asGetAmount(storage, (ASElement)product, &amount);
-    return amount;
-}
 
 Product getNextMinimalProductById (AmountSet storage, Product last_printed_product) 
 {
     Product ptr = (Product)asGetFirst(storage);
-    unsigned int current_min_id = last_printed_product->product_id;
-    Product current_min_id_product = last_printed_product;
+    int current_min_id = 0;
+    Product current_min_id_product = NULL;
     while (ptr != NULL){
-        if (ptr->product_id > last_printed_product->product_id && ptr->product_id < current_min_id) {
-            current_min_id = ptr->product_id;
-            current_min_id_product = ptr;
+        if (ptr->product_id <= last_printed_product->product_id){
+            ptr = (Product)asGetNext(storage);
+            continue;
         }
+        if (current_min_id != 0) {
+            if (ptr->product_id < current_min_id){
+                current_min_id = ptr->product_id;
+                current_min_id_product = ptr;
+                ptr = (Product)asGetNext(storage);
+                continue;
+            }
+        }
+        else {
+            current_min_id = ptr->product_id;
+                current_min_id_product = ptr;
+        } 
         ptr = (Product)asGetNext(storage);
     }
-    if (current_min_id = last_printed_product-> product_id) {
+    if (current_min_id == last_printed_product-> product_id) {
         return NULL;
     }
     return current_min_id_product;
 }
+
 
 Product getMinIdProduct (AmountSet storage)
 {
@@ -245,3 +222,44 @@ void updateProfitForProduct (Product product, double amount)
 {
     product->profit += ((product->price_function)(product->custom_data, amount));
 }
+
+/////get information for matamikya functions/////
+MatamikyaAmountType getAmountType (Product product)
+{
+    return product->amount_type;
+}
+
+char* getProductName (Product product)
+{
+    return product->product_description;
+}
+
+char* getProductNameById (AmountSet storage, unsigned int id)
+{
+    Product product = getProductInStorage(storage, id);
+    return getProductName(product);
+}
+
+unsigned int getProductId (Product product)
+{
+    return product->product_id;
+}
+
+double getProductIncome (Product product)
+{
+    printf ("%f", product->profit);
+    return product->profit;
+}
+
+double getProductPrice (Product product)
+{
+    return product->price_function(product->custom_data, 1); //מה היא יחידת מידה???
+}
+
+double getProductAmount (AmountSet storage, Product product)
+{
+    double amount;
+    asGetAmount(storage, (ASElement)product, &amount);
+    return amount;
+}
+

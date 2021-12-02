@@ -1,9 +1,9 @@
+#include "matamikya_print.h"
 #include "set.h"
 #include "amount_set.h"
 #include "matamikya.h"
 #include "orders.h"
 #include "product.h"
-#include "matamikya_print.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -20,6 +20,17 @@ struct Matamikya_t{
 /////////////////////////////////////////////////
 
 /////static declerations
+/*used before adding new product to the storage to check if product is valid
+*return values: 
+ *     MATAMIKYA_NULL_ARGUMENT - if matamikya/name/customData/copyData/freeData
+ *      /prodPrice are NULL.
+ *     MATAMIKYA_INVALID_NAME - if name is empty, or doesn't start with a
+ *         letter (a -z, A -Z) or a digit (0 -9).
+ *     MATAMIKYA_INVALID_AMOUNT - if amount < 0, or is not consistent with amountType
+ *         (@see MatamikyaAmountType documentation above)
+ *     MATAMIKYA_PRODUCT_ALREADY_EXIST - if a product with the given id already exist.
+ *     MATAMIKYA_SUCCESS - if product was added successfully.
+ * */
 static MatamikyaResult checkProductValid (Matamikya matamikya, const unsigned int id, const char *name,
                               const double amount, const MatamikyaAmountType amountType,
                               const MtmProductData customData, MtmCopyData copyData,
@@ -27,13 +38,24 @@ static MatamikyaResult checkProductValid (Matamikya matamikya, const unsigned in
 
 static MatamikyaResult checkProductAmountValid (const double amount, const MatamikyaAmountType amountType);
 static MatamikyaResult checkProductNameValid (const char *name);
+
+/*check if there is enough of a product to reduce amount from the storage, adding is
+*always allowed */
 static MatamikyaResult checkProductAmountSufficient (AmountSet storage, const double amount, Product product);
+
 static MatamikyaResult checkIfStorageNull (Matamikya matamikya);
 static MatamikyaResult checkIfOrdersNull(Matamikya matamikya);
+
+/*changes amounts and updates profits in the storage according to the legal shipped order*/
 static void updateShippedOrder(AmountSet storage, AmountSet order);
+
+/*checks if order is legal by checking if the amount in the storage is sufficient*/ 
 static bool checkIfOrderIsValidForShipping (AmountSet storage, AmountSet order);
+
 //static void calculateTotalPriceOfOrder(Matamikya matamikya, const unsigned int order_id);
 /////////////////////////////////////////////////
+
+////////MATAMIKYA FUNCTIONS///////
 
 Matamikya matamikyaCreate()
 {
@@ -240,7 +262,7 @@ MatamikyaResult mtmCancelOrder(Matamikya matamikya, const unsigned int orderId)
     freeOrder(temp_order);
     return MATAMIKYA_SUCCESS;
 }
-/*
+
 MatamikyaResult mtmPrintInventory(Matamikya matamikya, FILE *output)
 {
     if (checkIfStorageNull(matamikya) == MATAMIKYA_NULL_ARGUMENT || output == NULL) {
@@ -252,13 +274,12 @@ MatamikyaResult mtmPrintInventory(Matamikya matamikya, FILE *output)
         return MATAMIKYA_SUCCESS;
     }
     while (ptr_current_min != NULL) {
+        //mtmPrintProductDetails(getProductName(ptr_current_min), getProductId(ptr_current_min), getProductAmount(matamikya->storage, ptr_current_min), getProductPrice(ptr_current_min), output);
         ptr_current_min = getNextMinimalProductById(matamikya->storage, ptr_current_min);
-        mtmPrintProductDetails(getProductName(ptr_current_min), getProductId(ptr_current_min), 
-        getProductAmount(matamikya->storage, ptr_current_min), getProductPrice(ptr_current_min), output);
     }
     return MATAMIKYA_SUCCESS;
 }
-
+/*
 MatamikyaResult mtmPrintOrder(Matamikya matamikya, const unsigned int orderId, FILE *output)
 {
     if(checkIfOrdersNull(matamikya) == MATAMIKYA_NULL_ARGUMENT  || checkIfStorageNull(matamikya) == MATAMIKYA_NULL_ARGUMENT || output == NULL){
@@ -292,7 +313,7 @@ MatamikyaResult mtmPrintOrder(Matamikya matamikya, const unsigned int orderId, F
     mtmPrintOrderSummary(getTotalPriceForOrder (order), output);
     return MATAMIKYA_SUCCESS;
 }
-
+*/
 MatamikyaResult mtmPrintBestSelling(Matamikya matamikya, FILE *output) 
 {
     if (checkIfStorageNull(matamikya) == MATAMIKYA_NULL_ARGUMENT || output == NULL){
@@ -304,10 +325,11 @@ MatamikyaResult mtmPrintBestSelling(Matamikya matamikya, FILE *output)
         fprintf (output, "Best Selling Product:\nnone");
         return MATAMIKYA_SUCCESS;
     }
-    mtmPrintIncomeLine(getProductName(best_selling_product), getProductId(best_selling_product), max_profit, output);
+    fprintf (output, "Best Selling Product:\n");
+    //mtmPrintIncomeLine(getProductName(best_selling_product), getProductId(best_selling_product), max_profit, output);
     return MATAMIKYA_SUCCESS;
 }
-*/
+
 
 ///////////static functions/////////
 static MatamikyaResult checkProductValid (Matamikya matamikya, const unsigned int id, const char *name,
