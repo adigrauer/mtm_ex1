@@ -1,6 +1,6 @@
 CC = gcc
 EXE = matamikya_exe
-OBJS = orders.o product.o matamikya.o
+OBJS = orders.o product.o matamikya.o matamikya_print.o
 TEST_OBJ = matamikya_main.o matamikya_tests.o
 CFLAGS = -std=c99 -Wall -pedantic-errors -Werror -DNDEBUG
 DEBUG_FLAG = -g 
@@ -19,16 +19,18 @@ product.o: product.c product.h amount_set.h	\
 	$(CC) -c $(DEBUG_FLAG) $(CFLAGS) product.c product.h amount_set.h matamikya.h
 
 matamikya.o: matamikya.c orders.h amount_set.h product.h \
-			matamikya.h set.h matamikya_print.c matamikya_print.h
+			matamikya.h set.h matamikya_print.h
 	$(CC) -c $(DEBUG_FLAG) $(CFLAGS)  matamikya.c orders.h amount_set.h product.h \
-			matamikya.h set.h matamikya_print.c matamikya_print.h
+			matamikya.h set.h  matamikya_print.h
 	
-
+matamikya_print.o: matamikya_print.c matamikya_print.h
+	$(CC) -c $(DEBUG_FLAG) $(CFLAGS)  matamikya_print.c matamikya_print.h
+	
 matamikya_tests.o: tests/matamikya_tests.c tests/matamikya_tests.h tests/test_utilities.h
 	$(CC) -c $(DEBUG_FLAG) $(CFLAGS) tests/matamikya_tests.c tests/matamikya_tests.h	\
 			tests/test_utilities.h
 
-matamikya_main.o: tests/matamikya_main.c tests/matamikya_tests.h tests/test_utilities.h
+matamikya_main.o: tests/matamikya_main.c  tests/matamikya_tests.h tests/test_utilities.h
 	$(CC) -c $(DEBUG_FLAG) $(CFLAGS) tests/matamikya_main.c tests/matamikya_tests.h	\
 			tests/test_utilities.h
 
