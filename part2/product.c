@@ -141,8 +141,6 @@ Product getProductInStorage (AmountSet storage, const unsigned int id)
     return NULL;
 }
 
-///working but only print one best selling
-/*
 Product getBestSelling (AmountSet storage)
 {
     Product ptr = (Product)asGetFirst(storage);
@@ -162,58 +160,6 @@ Product getBestSelling (AmountSet storage)
         ptr = (Product)asGetNext(storage);
     }
     return max_profit_ptr;
-}
-*/
-
-Product getBestSellingOfMinimalIdProduct (AmountSet storage)
-{
-    Product ptr = (Product)asGetFirst(storage);
-    if (ptr == NULL){
-        return ptr;
-    }
-    Product max_profit_ptr = ptr;
-    while (ptr != NULL){
-        if(ptr->profit > max_profit_ptr->profit){
-            max_profit_ptr = ptr;
-        }
-        if(ptr->profit == max_profit_ptr->profit){
-            if (ptr->product_id < max_profit_ptr->product_id) {
-                max_profit_ptr = ptr;
-            }
-        }    
-        ptr = (Product)asGetNext(storage);
-    }
-    return max_profit_ptr;
-}
-
-Product getNextBestSelling (AmountSet storage, Product last_best_selling_printed)
-{
-    Product ptr = (Product)asGetFirst(storage);
-    int current_min_id = 0;
-    Product current_min_id_product = NULL;
-    while (ptr != NULL){
-        if (ptr->profit < last_best_selling_printed->profit ||  ptr->product_id <= last_best_selling_printed->product_id){
-            ptr = (Product)asGetNext(storage);
-            continue;
-        }
-        if (current_min_id != 0) {
-            if (ptr->product_id < current_min_id){
-                current_min_id = ptr->product_id;
-                current_min_id_product = ptr;
-                ptr = (Product)asGetNext(storage);
-                continue;
-            }
-        }
-        else {
-            current_min_id = ptr->product_id;
-            current_min_id_product = ptr;
-        } 
-        ptr = (Product)asGetNext(storage);
-    }
-    if (current_min_id == last_best_selling_printed-> product_id) {
-        return NULL;
-    }
-    return current_min_id_product;
 }
 
 Product getNextMinimalProductById (AmountSet storage, Product last_printed_product) 
@@ -313,4 +259,58 @@ double getProductAmount (AmountSet storage, Product product)
     asGetAmount(storage, (ASElement)product, &amount);
     return amount;
 }
+
+///for case that we will need to print all best selling by id order
+/*
+Product getBestSellingOfMinimalIdProduct (AmountSet storage)
+{
+    Product ptr = (Product)asGetFirst(storage);
+    if (ptr == NULL){
+        return ptr;
+    }
+    Product max_profit_ptr = ptr;
+    while (ptr != NULL){
+        if(ptr->profit > max_profit_ptr->profit){
+            max_profit_ptr = ptr;
+        }
+        if(ptr->profit == max_profit_ptr->profit){
+            if (ptr->product_id < max_profit_ptr->product_id) {
+                max_profit_ptr = ptr;
+            }
+        }    
+        ptr = (Product)asGetNext(storage);
+    }
+    return max_profit_ptr;
+}
+
+Product getNextBestSelling (AmountSet storage, Product last_best_selling_printed)
+{
+    Product ptr = (Product)asGetFirst(storage);
+    int current_min_id = 0;
+    Product current_min_id_product = NULL;
+    while (ptr != NULL){
+        if (ptr->profit < last_best_selling_printed->profit ||  ptr->product_id <= last_best_selling_printed->product_id){
+            ptr = (Product)asGetNext(storage);
+            continue;
+        }
+        if (current_min_id != 0) {
+            if (ptr->product_id < current_min_id){
+                current_min_id = ptr->product_id;
+                current_min_id_product = ptr;
+                ptr = (Product)asGetNext(storage);
+                continue;
+            }
+        }
+        else {
+            current_min_id = ptr->product_id;
+            current_min_id_product = ptr;
+        } 
+        ptr = (Product)asGetNext(storage);
+    }
+    if (current_min_id == last_best_selling_printed-> product_id) {
+        return NULL;
+    }
+    return current_min_id_product;
+}
+*/
 

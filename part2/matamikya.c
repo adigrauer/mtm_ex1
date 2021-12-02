@@ -317,27 +317,6 @@ MatamikyaResult mtmPrintBestSelling(Matamikya matamikya, FILE *output)
     if (checkIfStorageNull(matamikya) == MATAMIKYA_NULL_ARGUMENT || output == NULL){
         return MATAMIKYA_NULL_ARGUMENT;
     }
-    Product best_min_selling_product = getBestSellingOfMinimalIdProduct(matamikya->storage);
-    double max_profit = getProductIncome(best_min_selling_product);
-    if(max_profit == 0) {
-        fprintf (output, "Best Selling Product:\nnone\n");
-        return MATAMIKYA_SUCCESS;
-    }
-    fprintf (output, "Best Selling Product:\n");
-    while(best_min_selling_product != NULL){
-        mtmPrintIncomeLine(getProductName(best_min_selling_product), getProductId(best_min_selling_product), max_profit, output);
-        best_min_selling_product = getNextBestSelling (matamikya->storage, best_min_selling_product);
-    }
-    return MATAMIKYA_SUCCESS;
-}
-
-///working but prnint only one best selling 
-/*
-MatamikyaResult mtmPrintBestSelling(Matamikya matamikya, FILE *output) 
-{
-    if (checkIfStorageNull(matamikya) == MATAMIKYA_NULL_ARGUMENT || output == NULL){
-        return MATAMIKYA_NULL_ARGUMENT;
-    }
     Product best_selling_product = getBestSelling(matamikya->storage);
     double max_profit = getProductIncome(best_selling_product);
     if(max_profit == 0) {
@@ -348,7 +327,7 @@ MatamikyaResult mtmPrintBestSelling(Matamikya matamikya, FILE *output)
     mtmPrintIncomeLine(getProductName(best_selling_product), getProductId(best_selling_product), max_profit, output);
     return MATAMIKYA_SUCCESS;
 }
-*/
+
 /////////////////////////////////////////////////
 
 ///////////static functions/////////
