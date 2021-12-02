@@ -247,7 +247,6 @@ unsigned int getProductId (Product product)
 
 double getProductIncome (Product product)
 {
-    printf ("%f", product->profit);
     return product->profit;
 }
 
