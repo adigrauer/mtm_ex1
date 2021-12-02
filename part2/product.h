@@ -32,14 +32,17 @@ bool registerProduct (Product new_product, const unsigned int id, const char *na
 /*finds pointer to Product using an id*/
 Product getProductInStorage (AmountSet storage, const unsigned int id);
 
-Product getBestSelling (AmountSet storage);
+/* print only one best selling
+Product getBestSelling (AmountSet storage); */
+
+Product getBestSellingOfMinimalIdProduct (AmountSet storage);
+Product getNextBestSelling (AmountSet storage, Product last_best_selling_printed);
 
 /*gets a product with higer id then the product given, but lower then others*/
 Product getNextMinimalProductById (AmountSet storage, Product last_printed_product);
 
 /*gets the total minimal id product*/
 Product getMinIdProduct (AmountSet storage);
-
 
 /*for an amount and a product, return s the total price*/
 double calculatePriceForAmount (Product product, double amount);
