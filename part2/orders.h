@@ -38,12 +38,21 @@ bool checkIfOrderExistById(Set orders, const unsigned int order_id);
 return value- if allocate was faild or order id does not exist in orders
 otherewise return pointer to OrderInformation */
 
-///////////need to change the name to -GetListOfItemsInSpecificOrder
+///////////need to change the name to -GetListOfItemsInSpecificOrder///////////////////////
+/* return Amountset of list items in order for specific order by id
+return value- NULL if allocation was failed,
+otherwise return an Amounset pointer to the list of item in specific order in the orders set */
 AmountSet findSpecificOrderInOrders (Set orders, const unsigned int order_id);
 
-///////////need to change the name to -findSpecificOrderInOrders
+///////////need to change the name to -findSpecificOrderInOrders///////////////////////
+/* return Orderinformation of specific order by id
+return value- NULL if allocation was failed,
+otherwise return an OrderInformation pointer to specific order in the orders set */
 OrderInformation findOrderForChangeTotalPrice(Set orders, const unsigned int order_id);
 
+/* delete product by id from all orders in the set of orders
+return value- void function, delete the product by asDelete of amount set if exist,
+otherwise does not do nothing */
 void clearProductFromAllOrders (Set orders, const unsigned id);
 
 int getOrderId (OrderInformation order);
@@ -51,6 +60,7 @@ int getOrderId (OrderInformation order);
 void changeTotalPriceInOrder (OrderInformation order, double price_to_add);
 
 double getTotalPriceForOrder (OrderInformation order);
+
 ///////////////////////functions for item set amount in an order
 
 /* change the amount of item in specific order.
@@ -66,7 +76,9 @@ bool checkIfItemExistInOrderById(AmountSet list_items_in_order, const unsigned i
 returns value- NULL if allocated was faild, otherwise unsigned int* ewith the id */
 unsigned int* createNewIdForItemInOrder(const unsigned int product_id);
 
+/* find a specifi item in all existing orders
+return value- NULL if allocation was failed,
+otherwise return an unsigned int pointer to item in given order in the set of orders by product id */
 unsigned int* findSpecificItemInOrders(AmountSet order, const unsigned int product_id);
-
 
 #endif /*ORDERS_H*/
