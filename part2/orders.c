@@ -17,7 +17,7 @@ struct order_information_t {
 
 //functions for amountset SingleItemInOrder
 /////////////////////////////////////////////////
-ASElement copySingleItemInOrder(ASElement item_id)
+ASElement copySingleItemInOrder (ASElement item_id)
 {
     if(item_id == NULL){
         return NULL;
@@ -30,7 +30,7 @@ ASElement copySingleItemInOrder(ASElement item_id)
     return (ASElement)copy_id;
 }
 
-void freeSingleleItemInOrder(ASElement item_id)
+void freeSingleleItemInOrder (ASElement item_id)
 {
     if(item_id == NULL){
         return;
@@ -38,7 +38,7 @@ void freeSingleleItemInOrder(ASElement item_id)
     free(item_id);  //free 1
 }
 
-int compareSingleItemInOrder(ASElement item_id_1, ASElement item_id_2) //can be written withour malloc
+int compareSingleItemInOrder (ASElement item_id_1, ASElement item_id_2) //can be written withour malloc
 {
     return (*(unsigned int*)item_id_1) - (*(unsigned int*)item_id_2);
 }
@@ -47,7 +47,7 @@ int compareSingleItemInOrder(ASElement item_id_1, ASElement item_id_2) //can be 
 
 //functions for set OrdersInformation
 /////////////////////////////////////////////////
-SetElement copyOrder(SetElement order)
+SetElement copyOrder (SetElement order)
 {
     if(order == NULL){
         return NULL;
@@ -66,7 +66,7 @@ SetElement copyOrder(SetElement order)
     return (SetElement)new_order;
 }
 
-void freeOrder(SetElement order)
+void freeOrder (SetElement order)
 {
     if(order == NULL){
         return;
@@ -75,7 +75,7 @@ void freeOrder(SetElement order)
     free(order);    //free 2
 }
 
-int compareOrder(SetElement order_1, SetElement order_2)
+int compareOrder (SetElement order_1, SetElement order_2)
 {
     return (((OrderInformation)order_1)->order_id) - (((OrderInformation)order_2)->order_id);
 }
@@ -84,7 +84,7 @@ int compareOrder(SetElement order_1, SetElement order_2)
 
 //functions for orders set
 /////////////////////////////////////////////////
-OrderInformation createNewEmptyOrder(const unsigned int order_id) 
+OrderInformation createNewEmptyOrder (const unsigned int order_id) 
 {
     OrderInformation new_order = (OrderInformation)malloc(sizeof(*new_order));   //malloc!!!! need to free 3, will be free by function freeOrder
     if(new_order == NULL){
@@ -100,7 +100,7 @@ OrderInformation createNewEmptyOrder(const unsigned int order_id)
     return new_order;
 }
 
-bool checkIfOrderExistById(Set orders, const unsigned int order_id)
+bool checkIfOrderExistById (Set orders, const unsigned int order_id)
 {
     if(orders == NULL){
         return false;
@@ -114,7 +114,7 @@ bool checkIfOrderExistById(Set orders, const unsigned int order_id)
     return true;
 }
 
-AmountSet findSpecificOrderInOrders(Set orders, const unsigned int order_id)
+AmountSet GetListOfItemsInSpecificOrder (Set orders, const unsigned int order_id)
 {
     OrderInformation temp_order = createNewEmptyOrder(order_id);   //malloc!!!! need to free 8
     if(temp_order == NULL){
@@ -132,7 +132,7 @@ AmountSet findSpecificOrderInOrders(Set orders, const unsigned int order_id)
     return NULL;
 }
 
-OrderInformation findOrderForChangeTotalPrice(Set orders, const unsigned int order_id)
+OrderInformation findSpecificOrderInOrders (Set orders, const unsigned int order_id)
 {
     OrderInformation temp_order = createNewEmptyOrder(order_id);   //malloc!!!! need to free 8
     if(temp_order == NULL){
@@ -185,7 +185,7 @@ double getTotalPriceForOrder (OrderInformation order)
 
 //functions for items in order amount set
 /////////////////////////////////////////////////
-unsigned int* createNewIdForItemInOrder(const unsigned int product_id)
+unsigned int* createNewIdForItemInOrder (const unsigned int product_id)
 {
     unsigned int* new_product_id = (unsigned int*)malloc(sizeof(int));
     if(new_product_id == NULL){
@@ -195,7 +195,7 @@ unsigned int* createNewIdForItemInOrder(const unsigned int product_id)
     return new_product_id;
 }
 
-bool checkIfItemExistInOrderById(AmountSet list_items_in_order, const unsigned int product_id)
+bool checkIfItemExistInOrderById (AmountSet list_items_in_order, const unsigned int product_id)
 {
     if(list_items_in_order == NULL){
         return false;
@@ -209,7 +209,7 @@ bool checkIfItemExistInOrderById(AmountSet list_items_in_order, const unsigned i
     return true;
 }
 
-unsigned int* findSpecificItemInOrders(AmountSet order, const unsigned int product_id)
+unsigned int* findSpecificItemInOrders (AmountSet order, const unsigned int product_id)
 {
     unsigned int* temp_item = createNewIdForItemInOrder(product_id);   //malloc!!!! need to free 8
     if(temp_item == NULL){
@@ -227,6 +227,54 @@ unsigned int* findSpecificItemInOrders(AmountSet order, const unsigned int produ
     return NULL;
 }
 
+unsigned int* getMinIdItemInOrder (AmountSet order)
+{
+    unsigned int* ptr = (unsigned int*)asGetFirst(order); //ptr != NULL, useing this function only in case the order isnt empty
+    unsigned int* ptr_current_min = ptr;
+    unsigned int current_min_id_item = *ptr;
+    while (ptr != NULL) {
+        if(*ptr < current_min_id_item){
+            current_min_id_item = *ptr;
+            ptr_current_min = ptr;
+        }
+        ptr = (unsigned int*)asGetNext(order);
+    }
+    return ptr_current_min;
+}
+
+unsigned int* getNextMinimalItemInOrderById (AmountSet order, Product last_printed_product) 
+
+/*
+Product getNextMinimalProductById (AmountSet storage, Product last_printed_product) 
+{
+    Product ptr = (Product)asGetFirst(storage);
+    int current_min_id = 0;
+    Product current_min_id_product = NULL;
+    while (ptr != NULL){
+        if (ptr->product_id <= last_printed_product->product_id){
+            ptr = (Product)asGetNext(storage);
+            continue;
+        }
+        if (current_min_id != 0) {
+            if (ptr->product_id < current_min_id){
+                current_min_id = ptr->product_id;
+                current_min_id_product = ptr;
+                ptr = (Product)asGetNext(storage);
+                continue;
+            }
+        }
+        else {
+            current_min_id = ptr->product_id;
+                current_min_id_product = ptr;
+        } 
+        ptr = (Product)asGetNext(storage);
+    }
+    if (current_min_id == last_printed_product-> product_id) {
+        return NULL;
+    }
+    return current_min_id_product;
+}
+*/
 ////////////////////////////////////////////////
 
 
