@@ -242,39 +242,35 @@ unsigned int* getMinIdItemInOrder (AmountSet order)
     return ptr_current_min;
 }
 
-unsigned int* getNextMinimalItemInOrderById (AmountSet order, Product last_printed_product) 
-
-/*
-Product getNextMinimalProductById (AmountSet storage, Product last_printed_product) 
+unsigned int* getNextMinimalItemInOrderById (AmountSet order, unsigned int* last_printed_item) 
 {
-    Product ptr = (Product)asGetFirst(storage);
+    unsigned int* ptr = (unsigned int*)asGetFirst(order);
     int current_min_id = 0;
-    Product current_min_id_product = NULL;
+    unsigned int* current_min_id_item = NULL;
     while (ptr != NULL){
-        if (ptr->product_id <= last_printed_product->product_id){
-            ptr = (Product)asGetNext(storage);
+        if (*ptr <= *last_printed_item){
+            ptr = (unsigned int*)asGetNext(order);
             continue;
         }
         if (current_min_id != 0) {
-            if (ptr->product_id < current_min_id){
-                current_min_id = ptr->product_id;
-                current_min_id_product = ptr;
-                ptr = (Product)asGetNext(storage);
+            if (*ptr < current_min_id){
+                current_min_id = *ptr;
+                current_min_id_item = ptr;
+                ptr = (unsigned int*)asGetNext(order);
                 continue;
             }
         }
         else {
-            current_min_id = ptr->product_id;
-                current_min_id_product = ptr;
+            current_min_id = *ptr;
+            current_min_id_item = ptr;
         } 
-        ptr = (Product)asGetNext(storage);
+        ptr = (unsigned int*)asGetNext(order);
     }
-    if (current_min_id == last_printed_product-> product_id) {
+    if (current_min_id == *last_printed_item){
         return NULL;
     }
-    return current_min_id_product;
+    return current_min_id_item;
 }
-*/
 ////////////////////////////////////////////////
 
 
