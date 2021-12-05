@@ -201,7 +201,7 @@ MatamikyaResult mtmChangeProductAmountInOrder(Matamikya matamikya, const unsigne
     }
     if(checkIfItemExistInOrderById(ptr_order, productId) == false){
         if(amount <= 0){
-            return MATAMIKYA_PRODUCT_NOT_EXIST; ////need to cheack what to return if product no exist and amount<0
+            return MATAMIKYA_SUCCESS; 
         }
         unsigned int* new_product_id = createNewIdForItemInOrder(productId);
         asRegister(ptr_order, (ASElement)new_product_id);
