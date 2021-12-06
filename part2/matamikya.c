@@ -2,8 +2,8 @@
 #include "set.h"
 #include "amount_set.h"
 #include "matamikya.h"
-#include "orders.h"
-#include "product.h"
+#include "matamikya_orders.h"
+#include "matamikya_product.h"
 #include <stdlib.h>
 #include <stdio.h>
 
