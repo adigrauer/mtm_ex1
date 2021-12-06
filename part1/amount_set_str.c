@@ -148,7 +148,7 @@ bool asContains(AmountSet set, const char* element)
 
 AmountSetResult asGetAmount(AmountSet set, const char* element, double* outAmount)
 {
-    if(set == NULL || element == NULL){
+    if(set == NULL || element == NULL || outAmount == NULL){
         return AS_NULL_ARGUMENT;
     }
     if(asContains(set,element) == false || set->next == NULL){
