@@ -172,6 +172,11 @@ int getOrderId (OrderInformation order)
     return order->order_id;
 }
 
+void clearOrderTotalAmount (OrderInformation order)
+{
+    order->total_price = 0;
+}
+
 void changeTotalPriceInOrder (OrderInformation order, double price_to_add)
 {
     order->total_price += price_to_add;

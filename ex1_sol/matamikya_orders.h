@@ -57,6 +57,9 @@ void clearProductFromAllOrders (Set orders, const unsigned id);
 /* return order id for specific order by access to the field of order id in the struct */
 int getOrderId (OrderInformation order);
 
+/* need to clear total price before calculate each new printing */ 
+void clearOrderTotalAmount (OrderInformation order);
+
 /* add to the field of total price in specific order amount that given after calculating the profits of the order */
 void changeTotalPriceInOrder (OrderInformation order, double price_to_add);
 

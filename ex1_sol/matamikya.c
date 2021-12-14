@@ -466,6 +466,7 @@ static void calculateTotalPriceOfOrder(Matamikya matamikya, const unsigned int o
     unsigned int* ptr_product_id = (unsigned int*)asGetFirst(current_order);
     Product temp_product = NULL;
     OrderInformation temp_order = findSpecificOrderInOrders(matamikya->orders, order_id);
+    clearOrderTotalAmount(temp_order);
     double amount = 0;
     double price_to_add = 0;
     while (ptr_product_id != NULL){

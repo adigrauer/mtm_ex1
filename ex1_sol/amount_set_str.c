@@ -6,11 +6,11 @@
 
 /* struct declaration */
 ////////////////////////////////////////////
-struct Node_t {
+typedef struct Node_t {
     char* description;
     double item_amount;
     struct Node_t* next;
-};
+} *Node;
 
 struct AmountSet_t {
     struct Node_t* current_element;
@@ -20,9 +20,6 @@ struct AmountSet_t {
 
 /* static functions declaration */
 ////////////////////////////////////////////
-//int strcmp(const char *str1, const char *str2);
-//static int strLength(const char* element);
-//static char* copyString(const char* element);
 static Node createNode(char* element);
 static Node cheackForIndexRegister(AmountSet set, const char* element);
 ////////////////////////////////////////////
